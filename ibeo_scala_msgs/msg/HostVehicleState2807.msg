@@ -1,0 +1,19 @@
+Header header
+
+IbeoDataHeader ibeo_header
+time stamp
+Pose2D position
+float32 longitudinal_velocity
+float32 yaw_rate
+float32 steering_wheel_angle
+float32 cross_acceleration
+float32 front_wheel_angle
+float32 vehicle_width
+float32 vehicle_front_to_front_axle
+float32 rear_axle_to_front_axle
+float32 rear_axle_to_vehicle_rear
+float32 steer_ratio_poly_0
+float32 steer_ratio_poly_1
+float32 steer_ratio_poly_2
+float32 steer_ratio_poly_3
+float32 longitudinal_acceleration

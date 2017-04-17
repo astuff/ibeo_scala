@@ -1,0 +1,20 @@
+IbeoDataHeader header
+uint16 scan_number
+uint16 scanner_type
+uint16 scanner_status
+uint16 angle_ticks_per_rotation
+uint32 scan_flags
+MountingPositionI mounting_position
+uint8 device_id
+time scan_start_time
+time scan_end_time
+int16 start_angle
+int16 end_angle
+uint8 subflags
+uint8 mirror_side
+int16 mirror_tilt
+ScanPoint2208[] scan_points
+
+uint16 SCALA_B2=11520
+uint8 FRONT_MIRROR=0
+uint8 REAR_MIRROR=1

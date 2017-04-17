@@ -1,0 +1,14 @@
+Header header
+
+IbeoDataHeader ibeo_header
+time stamp
+uint16 scan_number
+uint16 error_flags
+float64 longitudinal_velocity
+float64 steering_wheel_angle
+float64 front_wheel_angle
+Pose2D position
+float64 course_angle
+uint16 time_difference_ms
+Pose2D prev_position
+float64 current_yaw_rate

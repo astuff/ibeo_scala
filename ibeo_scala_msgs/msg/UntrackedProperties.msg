@@ -1,0 +1,5 @@
+float64 relative_time_of_measure
+Point position_closest_point
+OrientedBoxWithSigmas object_box
+PointWithSigmas tracking_point_coordinate
+Polygon[] object_polygon
