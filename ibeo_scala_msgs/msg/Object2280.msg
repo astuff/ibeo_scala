@@ -10,24 +10,23 @@ uint16 object_prediction_age
 uint8 classification
 uint8 classification_certainty
 uint32 classification_age
-OrientedBoxWithSigmas object_box
-Point2DF object_box_center
-Point2DF object_box_center_sigma
-Point2DF object_box_size
+Point2DFloat object_box_center
+Point2DFloat object_box_center_sigma
+Point2DFloat object_box_size
 float32 object_box_orientation_angle
 float32 object_box_orientation_angle_sigma
-Point2DF relative_velocity
-Point2DF relative_velocity_sigma
-Point2DF absolute_velocity
-Point2DF absolute_velocity_sigma
-uint8 closest_point
+Point2DFloat relative_velocity
+Point2DFloat relative_velocity_sigma
+Point2DFloat absolute_velocity
+Point2DFloat absolute_velocity_sigma
+uint8 closest_point_index
 uint16 reference_point_location
-Point2DF reference_point_coordinate
-Point2DF reference_point_coordinate_sigma
+Point2DFloat reference_point_coordinate
+Point2DFloat reference_point_coordinate_sigma
 float32 reference_point_position_correction_coefficient
 uint16 object_priority
 float32 object_existence_measurement
-Point2DF[] contour_points
+Point2DFloat[] contour_points
 
 # tracked_by_model_type values
 uint8 DYNAMIC_MODEL=0

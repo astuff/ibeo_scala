@@ -2,7 +2,9 @@ Header header
 
 IbeoDataHeader ibeo_header
 time stamp
-Pose2D position
+int32 distance_x
+int32 distance_y
+float32 course_angle
 float32 longitudinal_velocity
 float32 yaw_rate
 float32 steering_wheel_angle

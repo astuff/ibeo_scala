@@ -7,6 +7,10 @@ time scan_end_time
 uint16 angle_ticks_per_rotation
 int16 start_angle
 int16 end_angle
-MountingPositionI mounting_position
-uint16 flags
-ScanPoint2202[] scan_points
+int16 mounting_yaw_angle
+int16 mounting_pitch_angle
+int16 mounting_roll_angle
+int16 mounting_position_x
+int16 mounting_position_y
+int16 mounting_position_z
+ScanPoint2202[] scan_point_list

@@ -1,20 +1,33 @@
 IbeoDataHeader header
 uint16 scan_number
 uint16 scanner_type
-uint16 scanner_status
+bool motor_on
+bool laser_on
+bool frequncy_locked
+uint8 motor_rotating_direction
 uint16 angle_ticks_per_rotation
-uint32 scan_flags
-MountingPositionI mounting_position
+int16 mounting_yaw_angle
+int16 mounting_pitch_angle
+int16 mounting_roll_angle
+int16 mounting_position_x
+int16 mounting_position_y
+int16 mounting_position_z
 uint8 device_id
 time scan_start_time
 time scan_end_time
 int16 start_angle
 int16 end_angle
-uint8 subflags
 uint8 mirror_side
 int16 mirror_tilt
 ScanPoint2208[] scan_points
 
+# scanner_type values
 uint16 SCALA_B2=11520
+
+# motor_rotating_direction values
+uint8 CLOCKWISE=0
+uint8 COUNTER_CLOCKWISE=1
+
+# mirror_side values
 uint8 FRONT_MIRROR=0
 uint8 REAR_MIRROR=1

@@ -2,19 +2,26 @@ uint16 object_age
 uint16 hidden_status_age
 uint8 object_phase
 uint8 dynamic_property
-float64 relative_time_of_measure
-Point position_closest_point
-Vector3WithSigmas relative_velocity
+uint16 relative_time_of_measure
+Point2Di position_closest_point
+Point2Di relative_velocity
+Point2Dui relative_velocity_sigma
 uint8 object_class
 uint16 classification_age
-OrientedBoxWithSigmas object_box
+Point2Di object_box_size
+Point2Dui object_box_size_sigma
+int16 object_box_orientation
+uint16 object_box_orientation_sigma
 uint8 tracking_point_location
-PointWithSigmas tracking_point_coordinate
-TwistWithSigmas velocity
-AccelWithSigmas acceleration
-float64 yaw_rate
-float64 yaw_rate_sigma
-Polygon[] object_polygon
+Point2Di tracking_point_coordinate
+Point2Dui tracking_point_coordinate_sigma
+Point2Di velocity
+Point2Dui velocity_sigma
+Point2Di acceleration
+Point2Dui acceleration_sigma
+int16 yaw_rate
+uint16 yaw_rate_sigma
+ContourPointISigma[] outline_points
 
 # object_phase values
 uint8 INITIALIZATION_PHASE=0

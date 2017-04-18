@@ -7,15 +7,17 @@ uint16 hidden_status_age
 uint8 classification
 uint8 classification_certainty
 uint32 classification_age
-Pose2D bounding_box_center
-SolidPrimitive bounding_box
-PointWithSigma object_box_center
-SolidPrimitive object_box
+Point2D bounding_box_center
+Point2D bounding_box_size
+Point2D object_box_center
+Point2D object_box_center_sigma
 float32 yaw_angle
-Vector3WithSigma relative_velocity
-Vector3WithSigma absolute_velocity
+Point2D relative_velocity
+Point2D relative_velocity_sigma
+Point2D absolute_velocity
+Point2D absolute_velocity_sigma
 uint8 closest_point_index
-Point[] contour_points
+Point2D[] contour_points
 
 # classification values
 uint8 UNCLASSIFIER=0
