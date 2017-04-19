@@ -1,0 +1,3 @@
+[submodule "ibeo_scala/core_ibeo_scala"]
+	path = ibeo_scala/core_ibeo_scala
+	url = https://bitbucket.org/autonomoustuff/core_ibeo_scala.git
