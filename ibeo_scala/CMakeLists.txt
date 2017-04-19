@@ -7,13 +7,13 @@ project(ibeo_scala)
 find_package(catkin REQUIRED
   COMPONENTS
   std_msgs
-  ibeo_lux_msgs
+  ibeo_scala_msgs
 )
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ibeo_scala
-  CATKIN_DEPENDS ibeo_lux_msgs
+  CATKIN_DEPENDS ibeo_scala_msgs
 #  DEPENDS system_lib
 )
 
