@@ -6,14 +6,17 @@ project(ibeo_scala)
 
 find_package(catkin REQUIRED
   COMPONENTS
-  std_msgs
+  roscpp
+  pcl_ros
+  network_interface
   ibeo_scala_msgs
 )
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ibeo_scala
-  CATKIN_DEPENDS ibeo_scala_msgs
+  CATKIN_DEPENDS
+  ibeo_scala_msgs
 #  DEPENDS system_lib
 )
 
@@ -36,6 +39,7 @@ add_dependencies(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
+  network_interface
   ${catkin_LIBRARIES}
 )
 

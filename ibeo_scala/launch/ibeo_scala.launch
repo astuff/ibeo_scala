@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="ibeo_scala" type="ibeo_scala" name="ibeo_scala">
+    <param name="frame_id" value="$(arg scala_frame_id)" />
+    <param name="host" value="$(arg ip_address)" />
+    <param name="port" value="$(arg port)" />
+    <param name="publish_raw_data" value="$(arg publish_raw_data)" />
+  </node>
+</launch>
