@@ -3,8 +3,9 @@
   <name>ibeo_scala</name>
   <version>1.6.0</version>
   <description>The ibeo_scala package</description>
-  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
   <license>LGPLv2.1</license>
+
+  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
 
   <url type="bugtracker">https://bitbucket.org/autonomoustuff/ros_ibeo_scala/issues</url>
   <url type="repository">https://bitbucket.org/autonomoustuff/ros_ibeo_scala</url>
@@ -12,7 +13,17 @@
   <author email="jwhitley@autonomoustuff.com">Joshua Whitley</author>
   <author email="preed@swri.org">P. J. Reed</author>
 
+  <build_depend>roscpp</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>network_interface</build_depend>
   <build_depend>ibeo_scala_msgs</build_depend>
+
   <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+  <run_depend>network_interface</run_depend>
   <run_depend>ibeo_scala_msgs</run_depend>
 </package>

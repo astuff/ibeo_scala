@@ -3,8 +3,9 @@
   <name>ibeo_scala_msgs</name>
   <version>1.6.0</version>
   <description>The ibeo_scala_msgs package</description>
-  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
   <license>LGPLv2.1</license>
+
+  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
 
   <url type="bugtracker">https://bitbucket.org/autonomoustuff/ros_ibeo_scala/issues</url>
   <url type="repository">https://bitbucket.org/autonomoustuff/ros_ibeo_scala</url>
