@@ -31,7 +31,6 @@ add_message_files(
   ObjectData2271.msg
   Point2DFloat.msg
   Point2Di.msg
-  Point2D.msg
   Point2Dui.msg
   ResolutionInfo.msg
   ScanData2202.msg

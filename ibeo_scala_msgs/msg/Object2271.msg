@@ -1,5 +1,3 @@
-Header header
-
 uint32 object_id
 bool tracked_properties_available
 bool untracked_properties_available

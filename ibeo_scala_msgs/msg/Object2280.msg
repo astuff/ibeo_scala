@@ -1,5 +1,3 @@
-Header header
-
 uint16 object_id
 uint8 tracked_by_model_type
 bool mobility_of_dyn_object_detected

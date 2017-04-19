@@ -1,5 +1,3 @@
-Header header
-
 uint16 object_id
 uint16 object_age
 uint16 predection_age
