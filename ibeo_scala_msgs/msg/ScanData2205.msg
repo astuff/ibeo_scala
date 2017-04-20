@@ -1,10 +1,13 @@
 Header header
+
+IbeoDataHeader ibeo_header
 time scan_start
 time scan_end
 bool fused_scan
 uint8 mirror_side
 uint8 coordinate_system
 uint16 scan_number
+uint8 number_of_scanner_infos
 ScannerInfo[] scanner_info_list
 ScanPoint2205[] scan_point_list
 

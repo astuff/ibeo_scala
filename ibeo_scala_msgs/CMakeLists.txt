@@ -15,9 +15,6 @@ add_message_files(
   ContourPointI.msg
   ContourPointISigma.msg
   DeviceStatus.msg
-  EcuObjectData2225.msg
-  EcuObjectData2280.msg
-  EcuScanData.msg
   HostVehicleState2805.msg
   HostVehicleState2806.msg
   HostVehicleState2807.msg
@@ -27,8 +24,10 @@ add_message_files(
   Object2270.msg
   Object2271.msg
   Object2280.msg
+  ObjectData2225.msg
   ObjectData2270.msg
   ObjectData2271.msg
+  ObjectData2280.msg
   Point2DFloat.msg
   Point2Di.msg
   Point2Dui.msg
