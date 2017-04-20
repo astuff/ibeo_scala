@@ -1,4 +1,4 @@
-float64 relative_time_of_measure
+uint16 relative_time_of_measure
 Point2Di position_closest_point
 Point2Di object_box_size
 Point2Dui object_box_sigma
@@ -6,4 +6,4 @@ int16 object_box_orientation
 uint16 object_box_orientation_sigma
 Point2Di tracking_point_coordinate
 Point2Dui tracking_point_coordinate_sigma
-ContourPointISigma[] outline_points
+ContourPointSigma[] outline_points

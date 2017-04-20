@@ -1,9 +1,9 @@
 uint16 object_id
-uint8 tracked_by_model_type
+uint8 tracking_model
 bool mobility_of_dyn_object_detected
 bool motion_model_validated
 uint32 object_age
-time stamp
+time timestamp
 uint16 object_prediction_age
 uint8 classification
 uint8 classification_certainty
@@ -24,9 +24,9 @@ Point2DFloat reference_point_coordinate_sigma
 float32 reference_point_position_correction_coefficient
 uint16 object_priority
 float32 object_existence_measurement
-Point2DFloat[] contour_points
+Point2DFloat[] contour_point_list
 
-# tracked_by_model_type values
+# tracking_model values
 uint8 DYNAMIC_MODEL=0
 uint8 STATIC_MODEL=1
 
@@ -41,6 +41,7 @@ uint8 TRUCK=6
 uint8 UNDER_DRIVABLE=12
 uint8 OVER_DRIVABLE=13
 
+# reference_point_location values
 uint16 CENTER_OF_GRAVITY=0
 uint16 FRONT_LEFT=1
 uint16 FRONT_RIGHT=2

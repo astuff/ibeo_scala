@@ -1,5 +1,5 @@
-uint16 object_id
-uint16 object_age
+uint16 id
+uint16 age
 uint16 predection_age
 uint16 relative_moment_of_measurement
 uint8 reference_point_location
@@ -27,7 +27,7 @@ bool mobile_detected
 bool track_valid
 uint16 classification_age
 uint16 classification_confidence
-ContourPointI[] contour_points
+Point2Di[] contour_point_list
 
 # reference_point_location values
 uint8 CENTER_OF_GRAVITY=0

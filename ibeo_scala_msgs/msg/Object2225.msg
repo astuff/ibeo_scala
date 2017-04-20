@@ -15,7 +15,7 @@ Point2DFloat relative_velocity_sigma
 Point2DFloat absolute_velocity
 Point2DFloat absolute_velocity_sigma
 uint8 closest_point_index
-Point2DFloat[] contour_points
+Point2DFloat[] contour_point_list
 
 # classification values
 uint8 UNCLASSIFIED=0

@@ -6,7 +6,7 @@ uint16 relative_time_of_measure
 Point2Di position_closest_point
 Point2Di relative_velocity
 Point2Dui relative_velocity_sigma
-uint8 object_class
+uint8 classification
 uint16 classification_age
 Point2Di object_box_size
 Point2Dui object_box_size_sigma
@@ -21,7 +21,7 @@ Point2Di acceleration
 Point2Dui acceleration_sigma
 int16 yaw_rate
 uint16 yaw_rate_sigma
-ContourPointISigma[] outline_points
+ContourPointSigma[] contour_point_list
 
 # object_phase values
 uint8 INITIALIZATION_PHASE=0
@@ -32,7 +32,7 @@ uint8 DYNAMIC_AND_MOVING=0
 uint8 DYNAMIC_AND_STOPPED=1
 uint8 A_PRIORI_STATIONARY=2
 
-# object_class values
+# classification values
 uint8 UNCLASSIFIED=0
 uint8 UNKNOWN_SMALL=1
 uint8 UNKNOWN_BIG=2

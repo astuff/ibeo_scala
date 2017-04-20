@@ -1,4 +1,4 @@
-uint32 object_id
+uint32 id
 bool tracked_properties_available
 bool untracked_properties_available
 TrackedProperties tracked_properties
