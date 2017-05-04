@@ -26,7 +26,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(core_ibeo_scala/include)
+include_directories(core_ibeo_scala/include
+  ${catkin_INCLUDE_DIRS}
+)
 
 add_executable(${PROJECT_NAME}
   src/ibeo_scala.cpp
@@ -39,7 +41,6 @@ add_dependencies(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  network_interface
   ${catkin_LIBRARIES}
 )
 

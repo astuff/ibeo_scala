@@ -28,3 +28,67 @@
 using namespace AS;
 using namespace AS::Network;
 using namespace AS::Drivers::IbeoScala;
+
+TCPInterface tcp_interface;
+
+int main(int argc, char **argv)
+{
+  //int c;
+  std::string ip_address = "192.168.1.52";
+	int port = 12002;
+	std::string frame_id = "ibeo_scala";
+	bool is_fusion = false;
+
+	// ROS initialization
+	ros::init(argc, argv, "ibeo_scala");
+	ros::NodeHandle n;
+	ros::NodeHandle priv("~");
+	ros::Rate loop_rate(1.0/0.01);
+	bool exit = false;
+
+	if (priv.getParam("ip_address", ip_address))
+	{ 
+		ROS_INFO("Got ip_address: %s", ip_address.c_str());
+		if (ip_address == "" )
+		{
+		 ROS_ERROR("IP Address Invalid");
+		 exit = true;
+		}
+	}
+
+	if (priv.getParam("port", port))
+	{ 
+		ROS_INFO("Got port: %d", port);
+		if (port < 0)
+		{
+		 ROS_ERROR("Port Invalid");
+		 exit = true;
+		}
+	}
+  
+	if (priv.getParam("is_fusion", is_fusion))
+	{ 
+		ROS_INFO("is Fusion ECU: %s", (is_fusion)? "true" : "false");
+	}
+
+	if (priv.getParam("sensor_frame_id", frame_id))
+	{
+		ROS_INFO("Got sensor frame ID: %s", frame_id.c_str());
+	}
+
+	if(exit)
+    return 0;
+
+  return_statuses status = tcp_interface.open(ip_address.c_str(), port);
+
+  if (status == ok)
+  {
+  }
+  else
+  {
+    ROS_ERROR("Connection to ScaLa could not be opened");
+  }
+
+  tcp_interface.close();
+  return 0;
+}
