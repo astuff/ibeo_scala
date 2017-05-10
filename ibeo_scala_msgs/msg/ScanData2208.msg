@@ -1,4 +1,6 @@
-IbeoDataHeader header
+Header header
+
+IbeoDataHeader ibeo_header
 uint16 scan_number
 uint16 scanner_type
 bool motor_on
