@@ -18,43 +18,19 @@
  *   USA
  */
 
-#include <ibeo_scala_core.h>
-#include <ros_msg_converters.h>
+#include <ros_msg_handler.h>
 #include <network_interface/network_interface.h>
 
 //C++ Includes
 #include <unordered_map>
 
-//ROS includes
-#include <ros/ros.h>
-
 //PCL Includes
 #include <pcl_ros/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
 
-//Messages
-#include <network_interface/TCPFrame.h>
-#include <ibeo_scala_msgs/ScanData2202.h>
-#include <ibeo_scala_msgs/ScanData2205.h>
-#include <ibeo_scala_msgs/ScanData2208.h>
-#include <ibeo_scala_msgs/ObjectData2225.h>
-#include <ibeo_scala_msgs/ObjectData2270.h>
-#include <ibeo_scala_msgs/ObjectData2271.h>
-#include <ibeo_scala_msgs/ObjectData2280.h>
-#include <ibeo_scala_msgs/CameraImage.h>
-#include <ibeo_scala_msgs/HostsVehicleState2805.h>
-#include <ibeo_scala_msgs/HostsVehicleState2806.h>
-#include <ibeo_scala_msgs/HostsVehicleState2807.h>
-#include <ibeo_scala_msgs/DeviceStatus.h>
-#include <geometry_msgs/Point.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <visualization_msgs/MarkerArray.h>
-
 using namespace AS;
 using namespace AS::Network;
 using namespace AS::Drivers::IbeoScala;
-
-template<typename T> T encode_ros_msg(unsigned short &data_type, IbeoTxMessage &msg_class);
 
 TCPInterface tcp_interface;
 
@@ -126,7 +102,7 @@ int main(int argc, char **argv)
                    camera_image_pub, vehicle_state_2805_pub, vehicle_state_2806_pub,
                    vehicle_state_2807_pub, device_status_pub;
 
-    std::unordered_map<unsigned short, ros::Publisher*> publist;
+    std::unordered_map<unsigned short, RosMsgHandler> handler_list;
 
     if (is_fusion)
     {
@@ -137,12 +113,19 @@ int main(int argc, char **argv)
       vehicle_state_2806_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
       vehicle_state_2807_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
 
-      publist.insert(std::make_pair(0x2205, &scan_2205_pub));
-      publist.insert(std::make_pair(0x2225, &object_2225_pub));
-      publist.insert(std::make_pair(0x2280, &object_2280_pub));
-      publist.insert(std::make_pair(0x2403, &camera_image_pub));
-      publist.insert(std::make_pair(0x2806, &vehicle_state_2806_pub));
-      publist.insert(std::make_pair(0x2807, &vehicle_state_2807_pub));
+      RosMsgHandler handler_2205(0x2205, &scan_2205_pub);
+      RosMsgHandler handler_2225(0x2225, &object_2225_pub);
+      RosMsgHandler handler_2280(0x2280, &object_2280_pub);
+      RosMsgHandler handler_2403(0x2403, &camera_image_pub);
+      RosMsgHandler handler_2806(0x2806, &vehicle_state_2806_pub);
+      RosMsgHandler handler_2807(0x2807, &vehicle_state_2807_pub);
+
+      handler_list.insert(std::make_pair(0x2205, handler_2205));
+      handler_list.insert(std::make_pair(0x2225, handler_2225));
+      handler_list.insert(std::make_pair(0x2280, handler_2280));
+      handler_list.insert(std::make_pair(0x2403, handler_2403));
+      handler_list.insert(std::make_pair(0x2806, handler_2806));
+      handler_list.insert(std::make_pair(0x2807, handler_2807));
     }
     else
     {
@@ -152,15 +135,22 @@ int main(int argc, char **argv)
       object_2271_pub = n.advertise<ibeo_scala_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
       vehicle_state_2805_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
 
-      publist.insert(std::make_pair(0x2202, &scan_2202_pub));
-      publist.insert(std::make_pair(0x2208, &scan_2208_pub));
-      publist.insert(std::make_pair(0x2270, &object_2270_pub));
-      publist.insert(std::make_pair(0x2271, &object_2271_pub));
-      publist.insert(std::make_pair(0x2805, &vehicle_state_2805_pub));
+      RosMsgHandler handler_2202(0x2202, &scan_2202_pub);
+      RosMsgHandler handler_2208(0x2208, &scan_2208_pub);
+      RosMsgHandler handler_2270(0x2270, &object_2270_pub);
+      RosMsgHandler handler_2271(0x2271, &object_2271_pub);
+      RosMsgHandler handler_2805(0x2805, &vehicle_state_2805_pub);
+
+      handler_list.insert(std::make_pair(0x2202, handler_2202));
+      handler_list.insert(std::make_pair(0x2208, handler_2208));
+      handler_list.insert(std::make_pair(0x2270, handler_2270));
+      handler_list.insert(std::make_pair(0x2271, handler_2271));
+      handler_list.insert(std::make_pair(0x2805, handler_2805));
     }
 
     device_status_pub = n.advertise<ibeo_scala_msgs::DeviceStatus>("parsed_tx/device_status", 1);
-    publist.insert(std::make_pair(0x6301, &device_status_pub));
+    RosMsgHandler handler_6301(0x6301, &device_status_pub);
+    handler_list.insert(std::make_pair(0x6301, handler_6301));
 
     while (ros::ok())
     {
@@ -209,23 +199,12 @@ int main(int argc, char **argv)
             IbeoDataHeader ibeo_header;
             ibeo_header.parse(&(messages[i][0]));
 
-            auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a class of the correct type.
+            auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
             class_parser->parse(&(messages[i][0])); //Parse the raw data into the class.
-            ros::Publisher* ros_publisher = publist.at(ibeo_header.data_type_id); //Get publisher.
+            auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
+            msg_handler.encode_and_publish(class_parser); //Create a new message of the correct type and publish it.
 
-            switch (ibeo_header.data_type_id)
-            {
-              case 0x2202:
-              {
-                auto msg = encode_2202(class_parser);
-                ros_publisher->publish(msg);
-              } break;
-              case 0x2205:
-              {
-                auto msg = encode_2205(class_parser);
-                ros_publisher->publish(msg);
-              } break;
-            }
+            //TODO: Figure out what to do with points and objects.
           }
 
           messages.clear();

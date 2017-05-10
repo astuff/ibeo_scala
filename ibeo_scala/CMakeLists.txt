@@ -26,9 +26,9 @@ include_directories(include/${PROJECT_NAME}
 )
 
 add_executable(${PROJECT_NAME}
-  core_ibeo_scala/src/ibeo_scala_core.cpp
-  src/ros_msg_converters.cpp
   src/ibeo_scala.cpp
+  src/ros_msg_handler.cpp
+  core_ibeo_scala/src/ibeo_scala_core.cpp
 )
 
 add_dependencies(${PROJECT_NAME}
