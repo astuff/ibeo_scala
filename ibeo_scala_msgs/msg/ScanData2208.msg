@@ -5,7 +5,7 @@ uint16 scan_number
 uint16 scanner_type
 bool motor_on
 bool laser_on
-bool frequncy_locked
+bool frequency_locked
 uint8 motor_rotating_direction
 uint16 angle_ticks_per_rotation
 uint32 scan_flags
@@ -22,7 +22,7 @@ int16 start_angle_ticks
 int16 end_angle_ticks
 uint8 mirror_side
 int16 mirror_tilt
-ScanPoint2208[] scan_points
+ScanPoint2208[] scan_point_list
 
 # scanner_type values
 uint16 SCALA_B2=11520

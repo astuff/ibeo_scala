@@ -215,6 +215,55 @@ void IbeoRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_msgs:
 void IbeoRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_scala_msgs::ScanData2208 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.scan_number = parser_class->scan_number;
+  new_msg.scanner_type = (parser_class->scanner_type == ibeo_scala_msgs::ScanData2208::SCALA_B2) ? ibeo_scala_msgs::ScanData2208::SCALA_B2 : 0;
+  new_msg.motor_on = parser_class->motor_on;
+  new_msg.laser_on = parser_class->laser_on;
+  new_msg.frequency_locked = parser_class->frequency_locked;
+  
+  if (parser_class->motor_rotating_direction == CLOCKWISE)
+    new_msg.motor_rotating_direction = ibeo_scala_msgs::ScanData2208::CLOCKWISE;
+  else if (parser_class->motor_rotating_direction == COUNTER_CLOCKWISE)
+    new_msg.motor_rotating_direction = ibeo_scala_msgs::ScanData2208::COUNTER_CLOCKWISE;
+
+  new_msg.angle_ticks_per_rotation = parser_class->angle_ticks_per_rotation;
+  new_msg.scan_flags = parser_class->scan_flags;
+  new_msg.mounting_yaw_angle_ticks = parser_class->mounting_yaw_angle_ticks;
+  new_msg.mounting_pitch_angle_ticks = parser_class->mounting_pitch_angle_ticks;
+  new_msg.mounting_roll_angle_ticks = parser_class->mounting_roll_angle_ticks;
+  new_msg.mounting_position_x = parser_class->mounting_position_x;
+  new_msg.mounting_position_y = parser_class->mounting_position_y;
+  new_msg.mounting_position_z = parser_class->mounting_position_z;
+  new_msg.device_id = parser_class->device_id;
+  new_msg.scan_start_time = ntp_to_ros_time(parser_class->scan_start_time);
+  new_msg.scan_end_time = ntp_to_ros_time(parser_class->scan_end_time);
+  new_msg.start_angle_ticks = parser_class->start_angle_ticks;
+  new_msg.end_angle_ticks = parser_class->end_angle_ticks;
+
+  if (parser_class->mirror_side == FRONT)
+    new_msg.mirror_side = ibeo_scala_msgs::ScanData2208::FRONT_MIRROR;
+  else if (parser_class->mirror_side == REAR)
+    new_msg.mirror_side = ibeo_scala_msgs::ScanData2208::REAR_MIRROR;
+
+  new_msg.mirror_tilt = parser_class->mirror_tilt;
+
+  for (auto scan_point : parser_class->scan_point_list)
+  {
+    ibeo_scala_msgs::ScanPoint2208 scan_point_msg;
+
+    scan_point_msg.echo = scan_point.echo;
+    scan_point_msg.layer = scan_point.layer;
+    scan_point_msg.transparent_point = scan_point.transparent_point;
+    scan_point_msg.clutter_atmospheric = scan_point.clutter_atmospheric;
+    scan_point_msg.ground = scan_point.ground;
+    scan_point_msg.dirt = scan_point.dirt;
+    scan_point_msg.horizontal_angle = scan_point.horizontal_angle;
+    scan_point_msg.radial_distance = scan_point.radial_distance;
+    scan_point_msg.echo_pulse_width = scan_point.echo_pulse_width;
+
+    new_msg.scan_point_list.push_back(scan_point_msg);
+  }
 }
 
 void IbeoRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scala_msgs::ObjectData2225 &new_msg)
