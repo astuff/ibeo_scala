@@ -18,6 +18,7 @@
 #include <ibeo_scala_msgs/HostsVehicleState2806.h>
 #include <ibeo_scala_msgs/HostsVehicleState2807.h>
 #include <ibeo_scala_msgs/DeviceStatus.h>
+#include <ibeo_scala_msgs/Point2DFloat.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <visualization_msgs/MarkerArray.h>

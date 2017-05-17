@@ -9,11 +9,13 @@ Point2DFloat bounding_box_center
 Point2DFloat bounding_box_size
 Point2DFloat object_box_center
 Point2DFloat object_box_center_sigma
+Point2DFloat object_box_size
 float32 yaw_angle
 Point2DFloat relative_velocity
 Point2DFloat relative_velocity_sigma
 Point2DFloat absolute_velocity
 Point2DFloat absolute_velocity_sigma
+uint8 number_of_contour_points
 uint8 closest_point_index
 Point2DFloat[] contour_point_list
 

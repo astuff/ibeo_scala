@@ -269,6 +269,83 @@ void IbeoRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_scala_msgs:
 void IbeoRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scala_msgs::ObjectData2225 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
+  new_msg.number_of_objects = parser_class->number_of_objects;
+
+  for (auto object : parser_class->object_list)
+  {
+    ibeo_scala_msgs::Object2225 object_msg;
+
+    object_msg.id = object.id;
+    object_msg.age = object.age;
+    object_msg.stamp = ntp_to_ros_time(object.timestamp);
+    object_msg.hidden_status_age = object.hidden_status_age;
+    
+    switch (object.classification)
+    {
+      case UNCLASSIFIED:
+        object_msg.classification = ibeo_scala_msgs::Object2225::UNCLASSIFIED;
+        break;
+      case UNKNOWN_SMALL:
+        object_msg.classification = ibeo_scala_msgs::Object2225::UNKNOWN_SMALL;
+        break;
+      case UNKNOWN_BIG:
+        object_msg.classification = ibeo_scala_msgs::Object2225::UNKNOWN_BIG;
+        break;
+      case PEDESTRIAN:
+        object_msg.classification = ibeo_scala_msgs::Object2225::PEDESTRIAN;
+        break;
+      case BIKE:
+        object_msg.classification = ibeo_scala_msgs::Object2225::BIKE;
+        break;
+      case CAR:
+        object_msg.classification = ibeo_scala_msgs::Object2225::CAR;
+        break;
+      case TRUCK:
+        object_msg.classification = ibeo_scala_msgs::Object2225::TRUCK;
+        break;
+      default:
+        object_msg.classification = ibeo_scala_msgs::Object2225::UNCLASSIFIED;
+        break;
+    }
+
+    object_msg.classification_certainty = object.classification_certainty;
+    object_msg.classification_age = object.classification_age;
+    object_msg.bounding_box_center.x = object.bounding_box_center.x;
+    object_msg.bounding_box_center.y = object.bounding_box_center.y;
+    object_msg.bounding_box_size.x = object.bounding_box_size.x;
+    object_msg.bounding_box_size.y = object.bounding_box_size.y;
+    object_msg.object_box_center.x = object.object_box_center.x;
+    object_msg.object_box_center.y = object.object_box_center.y;
+    object_msg.object_box_center_sigma.x = object.object_box_center_sigma.x;
+    object_msg.object_box_center_sigma.y = object.object_box_center_sigma.y;
+    object_msg.object_box_size.x = object.object_box_size.x;
+    object_msg.object_box_size.y = object.object_box_size.y;
+    object_msg.yaw_angle = object.yaw_angle;
+    object_msg.relative_velocity.x = object.relative_velocity.x;
+    object_msg.relative_velocity.y = object.relative_velocity.y;
+    object_msg.relative_velocity_sigma.x = object.relative_velocity_sigma.x;
+    object_msg.relative_velocity_sigma.y = object.relative_velocity_sigma.y;
+    object_msg.absolute_velocity.x = object.absolute_velocity.x;
+    object_msg.absolute_velocity.y = object.absolute_velocity.y;
+    object_msg.absolute_velocity_sigma.x = object.absolute_velocity_sigma.x;
+    object_msg.absolute_velocity_sigma.y = object.absolute_velocity_sigma.y;
+    object_msg.number_of_contour_points = object.number_of_contour_points;
+    object_msg.closest_point_index = object.closest_point_index;
+    
+    for (auto contour_point : object.contour_point_list)
+    {
+      ibeo_scala_msgs::Point2DFloat contour_point_msg;
+
+      contour_point_msg.x = contour_point.x;
+      contour_point_msg.y = contour_point.y;
+
+      object_msg.contour_point_list.push_back(contour_point_msg);
+    }
+
+    new_msg.object_list.push_back(object_msg);
+  }
 }
 
 void IbeoRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scala_msgs::ObjectData2270 &new_msg)
