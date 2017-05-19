@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 	int port = 12002;
 	std::string frame_id = "ibeo_scala";
 	bool is_fusion = false;
+  bool publish_raw = false;
   unsigned char *msg_buf;
   int buf_size = IBEO_PAYLOAD_SIZE;
   std::vector<unsigned char> partial_msg;
@@ -84,6 +85,11 @@ int main(int argc, char **argv)
 	{
 		ROS_INFO("Got sensor frame ID: %s", frame_id.c_str());
 	}
+
+  if (priv.getParam("publish_raw_data", publish_raw))
+  {
+    ROS_INFO("Publish raw data: %s", publish_raw ? "true" : "false");
+  }
 
 	if(exit)
     return 0;
@@ -196,6 +202,19 @@ int main(int argc, char **argv)
           //Found at least one message, let's parse them.
           for(unsigned int i = 0; i < messages.size(); i++)
           {
+            if (publish_raw)
+            {
+              network_interface::TCPFrame raw_frame;
+              raw_frame.address = ip_address;
+              raw_frame.port = port;
+              raw_frame.size = messages[i].size();
+              raw_frame.data.insert(raw_frame.data.begin(), messages[i].begin(), messages[i].end());
+              raw_frame.header.frame_id = frame_id;
+              raw_frame.header.stamp = ros::Time::now();
+
+              eth_tx_pub.publish(raw_frame);
+            }
+
             IbeoDataHeader ibeo_header;
             ibeo_header.parse(&(messages[i][0]));
 
