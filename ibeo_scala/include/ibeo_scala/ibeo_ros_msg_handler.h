@@ -10,7 +10,7 @@ class IbeoRosMsgHandler
   public:
     IbeoRosMsgHandler(unsigned short type_id, ros::Publisher &pub);
 
-    void encode_and_publish(IbeoTxMessage* parser_class);
+    void encode_and_publish(IbeoTxMessage* parser_class, std::string frame_id);
 
   private:
     unsigned short type_id;

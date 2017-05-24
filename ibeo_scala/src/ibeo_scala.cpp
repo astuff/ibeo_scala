@@ -42,6 +42,8 @@ int main(int argc, char **argv)
 	bool is_fusion = false;
   bool publish_raw = false;
   unsigned char *msg_buf;
+  unsigned char *orig_msg_buf; //Used for deallocation.
+  size_t bytes_read;
   int buf_size = IBEO_PAYLOAD_SIZE;
   std::vector<unsigned char> partial_msg;
   std::vector<std::vector<unsigned char>> messages;
@@ -161,40 +163,54 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
       buf_size = IBEO_PAYLOAD_SIZE;
-      msg_buf = (unsigned char*) malloc(buf_size); //New allocation.
+      orig_msg_buf = (unsigned char*) malloc(buf_size); //New allocation.
+      msg_buf = orig_msg_buf;
 
-      tcp_interface.read_some(msg_buf, buf_size); //Read a (big) chunk.
+      tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      buf_size = bytes_read;
 
       int first_mw = find_magic_word(msg_buf, buf_size);
 
       if (first_mw > -1)
       {
-        if (first_mw > 0 && !partial_msg.empty())
+        if (!partial_msg.empty())
         {
           //We have leftover data from last read and we found
-          //a new magic word past the beginning of this read.
-          //Assume that the leftover from last read and the beginning
-          //of this read make a new message.
+          //a new magic word.
+          //Assume that the leftover from last read and anything
+          //before the new magic word of this read make a new message.
 
           std::vector<unsigned char> new_part_msg(partial_msg.begin(), partial_msg.end());
-          new_part_msg.insert(new_part_msg.end(), msg_buf, msg_buf + first_mw);
+          new_part_msg.insert(new_part_msg.end(), msg_buf, msg_buf + first_mw + 1);
           messages.push_back(new_part_msg);
 
           partial_msg.clear();
         }
           
-        msg_buf = msg_buf + first_mw; //Point to the beginning of the first message in this chunk.
+        msg_buf += first_mw; //Point to the byte at the beginning of the first message in this chunk.
         buf_size -= first_mw;
 
         int mw_offset;
-        while ((mw_offset = find_magic_word(msg_buf, buf_size)) > -1)
-        {
-          //Found another message in this chunk.
-          std::vector<unsigned char> last_message(msg_buf, msg_buf + mw_offset);
-          messages.push_back(last_message);
+        bool more_magic = true;
 
-          msg_buf = msg_buf + mw_offset; //Point to the beginning of the next message.
-          buf_size -= mw_offset; //Reduce the size of the array.
+        while (more_magic)
+        {
+          unsigned char * new_buf = msg_buf + 1;
+          mw_offset = find_magic_word(new_buf, buf_size - 1);
+
+          if (mw_offset > -1)
+          {
+            //Found another message in this chunk.
+            std::vector<unsigned char> last_message(msg_buf, msg_buf + mw_offset);
+            messages.push_back(last_message);
+
+            msg_buf = msg_buf + mw_offset + 1; //Point to the beginning of the next message.
+            buf_size -= mw_offset; //Reduce the size of the array.
+          }
+          else
+          {
+            more_magic = false;
+          }
         }
 
         if (!messages.empty())
@@ -202,6 +218,7 @@ int main(int argc, char **argv)
           //Found at least one message, let's parse them.
           for(unsigned int i = 0; i < messages.size(); i++)
           {
+            ROS_INFO("Parsing message %u.", i);
             if (publish_raw)
             {
               network_interface::TCPFrame raw_frame;
@@ -215,28 +232,41 @@ int main(int argc, char **argv)
               eth_tx_pub.publish(raw_frame);
             }
 
+            ROS_INFO("Size of message: %lu.", messages[i].size());
+
             IbeoDataHeader ibeo_header;
-            ibeo_header.parse(&(messages[i][0]));
+            ibeo_header.parse(messages[i].data());
+
+            ROS_INFO("Got message type: 0x%X", ibeo_header.data_type_id);
 
             auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
-            class_parser->parse(&(messages[i][0])); //Parse the raw data into the class.
-            auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
-            msg_handler.encode_and_publish(class_parser); //Create a new message of the correct type and publish it.
+            ROS_INFO("Created class parser.");
 
-            //TODO: Figure out what to do with points and objects.
-            if (class_parser->has_scan_points)
+            if (class_parser != NULL)
             {
-              std::vector<Point3D> scan_points = class_parser->get_scan_points();
-            }
+              //Only parse message types we know how to handle.
+              class_parser->parse(messages[i].data()); //Parse the raw data into the class.
+              ROS_INFO("Parsed data.");
+              auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
+              ROS_INFO("Created message handler.");
+              msg_handler.encode_and_publish(class_parser, frame_id); //Create a new message of the correct type and publish it.
+              ROS_INFO("Encoded ROS message.");
 
-            if (class_parser->has_contour_points)
-            {
-              std::vector<Point3D> contour_points = class_parser->get_contour_points();
-            }
+              //TODO: Figure out what to do with points and objects.
+              if (class_parser->has_scan_points)
+              {
+                std::vector<Point3D> scan_points = class_parser->get_scan_points();
+              }
 
-            if (class_parser->has_objects)
-            {
-              std::vector<IbeoObject> objects = class_parser->get_objects();
+              if (class_parser->has_contour_points)
+              {
+                std::vector<Point3D> contour_points = class_parser->get_contour_points();
+              }
+
+              if (class_parser->has_objects)
+              {
+                std::vector<IbeoObject> objects = class_parser->get_objects();
+              }
             }
           }
 
@@ -250,7 +280,9 @@ int main(int argc, char **argv)
         }
       }
 
-      free(msg_buf); //FREE THE BITS
+      free(orig_msg_buf); //FREE THE BITS
+      loop_rate.sleep();
+      //ros::spinOnce(); // No callbacks yet - no reason to spin.
     }
   }
   else
