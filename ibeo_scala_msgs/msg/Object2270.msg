@@ -1,6 +1,6 @@
 uint16 id
 uint16 age
-uint16 predection_age
+uint16 prediction_age
 uint16 relative_moment_of_measurement
 uint8 reference_point_location
 int16 reference_point_position_x
@@ -27,6 +27,7 @@ bool mobile_detected
 bool track_valid
 uint16 classification_age
 uint16 classification_confidence
+uint16 number_of_contour_points
 Point2Di[] contour_point_list
 
 # reference_point_location values

@@ -21,6 +21,7 @@ Point2Di acceleration
 Point2Dui acceleration_sigma
 int16 yaw_rate
 uint16 yaw_rate_sigma
+uint8 number_of_contour_points
 ContourPointSigma[] contour_point_list
 
 # object_phase values
@@ -36,8 +37,8 @@ uint8 A_PRIORI_STATIONARY=2
 uint8 UNCLASSIFIED=0
 uint8 UNKNOWN_SMALL=1
 uint8 UNKNOWN_BIG=2
-uint8 PEDESTRIANS=3
-uint8 TWO_WHEELER=4
+uint8 PEDESTRIAN=3
+uint8 BIKE=4
 uint8 CAR=5
 uint8 TRUCK=6
 uint8 OVER_DRIVABLE=10
@@ -45,13 +46,13 @@ uint8 UNDER_DRIVABLE=11
 
 # tracking_point_location values
 uint8 CENTER_OF_GRAVITY=0
-uint8 FRONT_LEFT=1
-uint8 FRONT_RIGHT=2
-uint8 REAR_RIGHT=3
-uint8 REAR_LEFT=4
-uint8 FRONT_CENTER=5
-uint8 RIGHT_CENTER=6
-uint8 REAR_CENTER=7
-uint8 LEFT_CENTER=8
-uint8 OBJECT_CENTER=9
-uint8 UNKNOWN=255
+uint8 TOP_FRONT_LEFT_CORNER=1
+uint8 TOP_FRONT_RIGHT_CORNER=2
+uint8 BOTTOM_REAR_RIGHT_CORNER=3
+uint8 BOTTOM_REAR_LEFT_CORNER=4
+uint8 CENTER_OF_TOP_FRONT_EDGE=5
+uint8 CENTER_OF_RIGHT_EDGE=6
+uint8 CENTER_OF_BOTTOM_REAR_EDGE=7
+uint8 CENTER_OF_LEFT_EDGE=8
+uint8 BOX_CENTER=9
+uint8 INVALID=255

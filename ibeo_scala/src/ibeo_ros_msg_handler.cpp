@@ -375,11 +375,319 @@ void IbeoRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scala_msg
 void IbeoRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scala_msgs::ObjectData2270 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.start_scan_timestamp = ntp_to_ros_time(parser_class->start_scan_timestamp);
+  new_msg.object_list_number = parser_class->object_list_number;
+  new_msg.number_of_objects = parser_class->number_of_objects;
+
+  for (auto object : parser_class->object_list)
+  {
+    ibeo_scala_msgs::Object2270 object_msg;
+
+    object_msg.id = object.id;
+    object_msg.age = object.age;
+    object_msg.prediction_age = object.prediction_age;
+    object_msg.relative_moment_of_measurement = object.relative_moment_of_measurement;
+    
+    switch (object.reference_point_location)
+    {
+      case COG:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_GRAVITY;
+        break;
+      case TOP_FRONT_LEFT_CORNER:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::TOP_FRONT_LEFT_CORNER;
+        break;
+      case TOP_FRONT_RIGHT_CORNER:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::TOP_FRONT_RIGHT_CORNER;
+        break;
+      case BOTTOM_REAR_RIGHT_CORNER:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOTTOM_REAR_RIGHT_CORNER;
+        break;
+      case BOTTOM_REAR_LEFT_CORNER:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOTTOM_REAR_LEFT_CORNER;
+        break;
+      case CENTER_OF_TOP_FRONT_EDGE:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_TOP_FRONT_EDGE;
+        break;
+      case CENTER_OF_RIGHT_EDGE:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_RIGHT_EDGE;
+        break;
+      case CENTER_OF_BOTTOM_REAR_EDGE:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_BOTTOM_REAR_EDGE;
+        break;
+      case CENTER_OF_LEFT_EDGE:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_LEFT_EDGE;
+        break;
+      case BOX_CENTER:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOX_CENTER;
+        break;
+      case INVALID:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::INVALID;
+        break;
+      default:
+        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::INVALID;
+        break;
+    }
+
+    object_msg.reference_point_position_x = object.reference_point_position_x;
+    object_msg.reference_point_position_y = object.reference_point_position_y;
+    object_msg.reference_point_position_sigma_x = object.reference_point_position_sigma_x;
+    object_msg.reference_point_position_sigma_y = object.reference_point_position_sigma_y;
+    object_msg.contour_points_cog_x = object.contour_points_cog_x;
+    object_msg.contour_points_cog_y = object.contour_points_cog_y;
+    object_msg.object_box_length = object.object_box_length;
+    object_msg.object_box_width = object.object_box_width;
+    object_msg.object_box_orientation_angle = object.object_box_orientation_angle;
+    object_msg.object_box_orientation_angle_sigma = object.object_box_orientation_angle_sigma;
+    object_msg.absolute_velocity_x = object.absolute_velocity_x;
+    object_msg.absolute_velocity_y = object.absolute_velocity_y;
+    object_msg.absolute_velocity_sigma_x = object.absolute_velocity_sigma_x;
+    object_msg.absolute_velocity_sigma_y = object.absolute_velocity_sigma_y;
+    object_msg.relative_velocity_x = object.relative_velocity_x;
+    object_msg.relative_velocity_y = object.relative_velocity_y;
+    object_msg.relative_velocity_sigma_x = object.relative_velocity_sigma_x;
+    object_msg.relative_velocity_sigma_y = object.relative_velocity_sigma_y;
+    
+    switch (object.classification)
+    {
+      case UNCLASSIFIED:
+        object_msg.classification = ibeo_scala_msgs::Object2270::UNCLASSIFIED;
+        break;
+      case UNKNOWN_SMALL:
+        object_msg.classification = ibeo_scala_msgs::Object2270::UNKNOWN_SMALL;
+        break;
+      case UNKNOWN_BIG:
+        object_msg.classification = ibeo_scala_msgs::Object2270::UNKNOWN_BIG;
+        break;
+      case PEDESTRIAN:
+        object_msg.classification = ibeo_scala_msgs::Object2270::PEDESTRIAN;
+        break;
+      case BIKE:
+        object_msg.classification = ibeo_scala_msgs::Object2270::BIKE;
+        break;
+      case CAR:
+        object_msg.classification = ibeo_scala_msgs::Object2270::CAR;
+        break;
+      case TRUCK:
+        object_msg.classification = ibeo_scala_msgs::Object2270::TRUCK;
+        break;
+      default:
+        object_msg.classification = ibeo_scala_msgs::Object2270::UNCLASSIFIED;
+        break;
+    }
+
+    switch (object.tracking_model)
+    {
+      case STATIC:
+        object_msg.tracking_model = ibeo_scala_msgs::Object2270::STATIC_MODEL;
+        break;
+      case DYNAMIC:
+        object_msg.tracking_model = ibeo_scala_msgs::Object2270::DYNAMIC_MODEL;
+        break;
+      default:
+        object_msg.tracking_model = ibeo_scala_msgs::Object2270::DYNAMIC_MODEL;
+        break;
+    }
+
+    object_msg.mobile_detected = object.mobile_detected;
+    object_msg.track_valid = object.track_valid;
+    object_msg.classification_age = object.classification_age;
+    object_msg.classification_confidence = object.classification_confidence;
+    object_msg.number_of_contour_points = object.number_of_contour_points;
+
+    for (auto contour_point : object.contour_point_list)
+    {
+      ibeo_scala_msgs::Point2Di contour_point_msg;
+
+      contour_point_msg.x = contour_point.x;
+      contour_point_msg.y = contour_point.y;
+      object_msg.contour_point_list.push_back(contour_point_msg);
+    }
+
+    new_msg.object_list.push_back(object_msg);
+  }
 }
 
 void IbeoRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scala_msgs::ObjectData2271 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.start_scan_timestamp = ntp_to_ros_time(parser_class->start_scan_timestamp);
+  new_msg.scan_number = parser_class->scan_number;
+  new_msg.number_of_objects = parser_class->number_of_objects;
+
+  for (auto object : parser_class->object_list)
+  {
+    ibeo_scala_msgs::Object2271 object_msg;
+
+    object_msg.untracked_properties_available = object.untracked_properties_available;
+    object_msg.tracked_properties_available = object.tracked_properties_available;
+    
+    object_msg.untracked_properties.relative_time_of_measurement = object.untracked_properties.relative_time_of_measurement;
+    object_msg.untracked_properties.position_closest_point.x = object.untracked_properties.position_closest_point.x;
+    object_msg.untracked_properties.position_closest_point.y = object.untracked_properties.position_closest_point.y;
+    object_msg.untracked_properties.object_box_size.x = object.untracked_properties.object_box_size.x;
+    object_msg.untracked_properties.object_box_size.y = object.untracked_properties.object_box_size.y;
+    object_msg.untracked_properties.object_box_size_sigma.x = object.untracked_properties.object_box_size_sigma.x;
+    object_msg.untracked_properties.object_box_size_sigma.y = object.untracked_properties.object_box_size_sigma.y;
+    object_msg.untracked_properties.object_box_orientation = object.untracked_properties.object_box_orientation;
+    object_msg.untracked_properties.object_box_orientation_sigma = object.untracked_properties.object_box_orientation_sigma;
+    object_msg.untracked_properties.tracking_point_coordinate.x = object.untracked_properties.tracking_point_coordinate.x;
+    object_msg.untracked_properties.tracking_point_coordinate.y = object.untracked_properties.tracking_point_coordinate.y;
+    object_msg.untracked_properties.tracking_point_coordinate_sigma.x = object.untracked_properties.tracking_point_coordinate_sigma.x;
+    object_msg.untracked_properties.tracking_point_coordinate_sigma.y = object.untracked_properties.tracking_point_coordinate_sigma.y;
+    object_msg.untracked_properties.number_of_contour_points = object.untracked_properties.number_of_contour_points;
+
+    for (auto contour_point : object.untracked_properties.contour_point_list)
+    {
+      ibeo_scala_msgs::ContourPointSigma contour_point_msg;
+
+      contour_point_msg.x = contour_point.x;
+      contour_point_msg.y = contour_point.y;
+      contour_point_msg.x_sigma = contour_point.x_sigma;
+      contour_point_msg.y_sigma = contour_point.y_sigma;
+      object_msg.untracked_properties.contour_point_list.push_back(contour_point_msg);
+    }
+
+    object_msg.tracked_properties.object_age = object.tracked_properties.object_age;
+    object_msg.tracked_properties.hidden_status_age = object.tracked_properties.hidden_status_age;
+    
+    switch (object.tracked_properties.object_phase)
+    {
+      case INITIALIZATION:
+        object_msg.tracked_properties.object_phase = ibeo_scala_msgs::TrackedProperties::INITIALIZATION_PHASE;
+        break;
+      case TRACKING:
+        object_msg.tracked_properties.object_phase = ibeo_scala_msgs::TrackedProperties::TRACKING_PHASE;
+        break;
+    }
+
+    switch (object.tracked_properties.dynamic_property)
+    {
+      case DYNAMIC_AND_MOVING:
+        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::DYNAMIC_AND_MOVING;
+        break;
+      case DYNAMIC_AND_STOPPED:
+        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::DYNAMIC_AND_STOPPED;
+        break;
+      case A_PRIORI_STATIONARY:
+        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::A_PRIORI_STATIONARY;
+        break;
+    }
+
+    object_msg.tracked_properties.relative_time_of_measure = object.tracked_properties.relative_time_of_measure;
+    object_msg.tracked_properties.position_closest_point.x = object.tracked_properties.position_closest_point.x;
+    object_msg.tracked_properties.position_closest_point.y = object.tracked_properties.position_closest_point.y;
+    object_msg.tracked_properties.relative_velocity.x = object.tracked_properties.relative_velocity.x;
+    object_msg.tracked_properties.relative_velocity.y = object.tracked_properties.relative_velocity.y;
+    object_msg.tracked_properties.relative_velocity_sigma.x = object.tracked_properties.relative_velocity_sigma.x;
+    object_msg.tracked_properties.relative_velocity_sigma.y = object.tracked_properties.relative_velocity_sigma.y;
+
+    switch (object.tracked_properties.classification)
+    {
+      case UNCLASSIFIED:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNCLASSIFIED;
+        break;
+      case UNKNOWN_SMALL:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNKNOWN_SMALL;
+        break;
+      case UNKNOWN_BIG:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNKNOWN_BIG;
+        break;
+      case PEDESTRIAN:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::PEDESTRIAN;
+        break;
+      case BIKE:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::BIKE;
+        break;
+      case CAR:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::CAR;
+        break;
+      case TRUCK:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::TRUCK;
+        break;
+      default:
+        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNCLASSIFIED;
+        break;
+    }
+
+    object_msg.tracked_properties.classification_age = object.tracked_properties.classification_age;
+    object_msg.tracked_properties.object_box_size.x = object.tracked_properties.object_box_size.x;
+    object_msg.tracked_properties.object_box_size.y = object.tracked_properties.object_box_size.y;
+    object_msg.tracked_properties.object_box_size_sigma.x = object.tracked_properties.object_box_size_sigma.x;
+    object_msg.tracked_properties.object_box_size_sigma.y = object.tracked_properties.object_box_size_sigma.y;
+    object_msg.tracked_properties.object_box_orientation = object.tracked_properties.object_box_orientation;
+    object_msg.tracked_properties.object_box_orientation_sigma = object.tracked_properties.object_box_orientation_sigma;
+
+    switch (object.tracked_properties.tracking_point_location)
+    {
+      case COG:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_GRAVITY;
+        break;
+      case TOP_FRONT_LEFT_CORNER:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::TOP_FRONT_LEFT_CORNER;
+        break;
+      case TOP_FRONT_RIGHT_CORNER:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::TOP_FRONT_RIGHT_CORNER;
+        break;
+      case BOTTOM_REAR_RIGHT_CORNER:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOTTOM_REAR_RIGHT_CORNER;
+        break;
+      case BOTTOM_REAR_LEFT_CORNER:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOTTOM_REAR_LEFT_CORNER;
+        break;
+      case CENTER_OF_TOP_FRONT_EDGE:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_TOP_FRONT_EDGE;
+        break;
+      case CENTER_OF_RIGHT_EDGE:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_RIGHT_EDGE;
+        break;
+      case CENTER_OF_BOTTOM_REAR_EDGE:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_BOTTOM_REAR_EDGE;
+        break;
+      case CENTER_OF_LEFT_EDGE:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_LEFT_EDGE;
+        break;
+      case BOX_CENTER:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOX_CENTER;
+        break;
+      case INVALID:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::INVALID;
+        break;
+      default:
+        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::INVALID;
+        break;
+    }
+
+    object_msg.tracked_properties.tracking_point_coordinate.x = object.tracked_properties.tracking_point_coordinate.x;
+    object_msg.tracked_properties.tracking_point_coordinate.y = object.tracked_properties.tracking_point_coordinate.y;
+    object_msg.tracked_properties.tracking_point_coordinate_sigma.x = object.tracked_properties.tracking_point_coordinate_sigma.x;
+    object_msg.tracked_properties.tracking_point_coordinate_sigma.y = object.tracked_properties.tracking_point_coordinate_sigma.y;
+    object_msg.tracked_properties.velocity.x = object.tracked_properties.velocity.x;
+    object_msg.tracked_properties.velocity.y = object.tracked_properties.velocity.y;
+    object_msg.tracked_properties.velocity_sigma.x = object.tracked_properties.velocity_sigma.x;
+    object_msg.tracked_properties.velocity_sigma.y = object.tracked_properties.velocity_sigma.y;
+    object_msg.tracked_properties.acceleration.x = object.tracked_properties.acceleration.x;
+    object_msg.tracked_properties.acceleration.y = object.tracked_properties.acceleration.y;
+    object_msg.tracked_properties.acceleration_sigma.x = object.tracked_properties.acceleration_sigma.x;
+    object_msg.tracked_properties.acceleration_sigma.y = object.tracked_properties.acceleration_sigma.y;
+    object_msg.tracked_properties.yaw_rate = object.tracked_properties.yaw_rate;
+    object_msg.tracked_properties.yaw_rate_sigma = object.tracked_properties.yaw_rate_sigma;
+    object_msg.tracked_properties.number_of_contour_points = object.tracked_properties.number_of_contour_points;
+
+    for (auto contour_point : object.tracked_properties.contour_point_list)
+    {
+      ibeo_scala_msgs::ContourPointSigma contour_point_msg;
+
+      contour_point_msg.x = contour_point.x;
+      contour_point_msg.y = contour_point.y;
+      contour_point_msg.x_sigma = contour_point.x_sigma;
+      contour_point_msg.y_sigma = contour_point.y_sigma;
+      object_msg.tracked_properties.contour_point_list.push_back(contour_point_msg);
+    }
+
+    new_msg.object_list.push_back(object_msg);
+  }
 }
 
 void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg)
