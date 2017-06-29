@@ -701,10 +701,10 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
   {
     ibeo_scala_msgs::Object2280 object_msg;
 
-    object_msg.id = object.id;
+    object_msg.object_id = object.id;
 
     object_msg.tracking_model = (uint8_t) object.tracking_model;
-    object_msg.tracking_model = (object.tracking_model == DYNAMIC ? object_msg.DYNAMIC : object_msg.STATIC);
+    object_msg.tracking_model = (object.tracking_model == DYNAMIC ? object_msg.DYNAMIC_MODEL : object_msg.STATIC_MODEL);
 
 
     object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
@@ -740,16 +740,31 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
 
     object_msg.classification_certainty = object.classification_certainty;
     object_msg.classification_age = object.classification_age;
-    object_msg.object_box_center = object.object_box_center;
-    object_msg.object_box_center_sigma = object.object_box_center_sigma;
-    object_msg.object_box_size = object.object_box_size;
+
+    object_msg.object_box_center.x = object.object_box_center.x;
+    object_msg.object_box_center.y = object.object_box_center.y;
+
+    object_msg.object_box_center_sigma.x = object.object_box_center_sigma.x;
+    object_msg.object_box_center_sigma.y = object.object_box_center_sigma.y;
+
+    object_msg.object_box_size.x = object.object_box_size.x;
+    object_msg.object_box_size.y = object.object_box_size.y;
+
     object_msg.object_box_orientation_angle = object.object_box_orientation_angle;
     object_msg.object_box_orientation_angle_sigma = object.object_box_orientation_angle_sigma;
-    object_msg.relative_velocity = object.relative_velocity;
-    object_msg.relative_velocity_sigma = object.relative_velocity_sigma;
-    object_msg.absolute_velocity = object.absolute_velocity;
-    object_msg.absolute_velocity_sigma = object.absolute_velocity_sigma;
-    object_msg.number_of_contour_points = object.number_of_contour_points;
+    
+    object_msg.relative_velocity.x = object.relative_velocity.x;
+    object_msg.relative_velocity.y = object.relative_velocity.y;
+    
+    object_msg.relative_velocity_sigma.x = object.relative_velocity_sigma.x;
+    object_msg.relative_velocity_sigma.y = object.relative_velocity_sigma.y;
+    
+    object_msg.absolute_velocity.x = object.absolute_velocity.x;
+    object_msg.absolute_velocity.y = object.absolute_velocity.y;
+    
+    object_msg.absolute_velocity_sigma.x = object.absolute_velocity_sigma.x;
+    object_msg.absolute_velocity_sigma.y = object.absolute_velocity_sigma.y;
+    
     object_msg.closest_point_index = object.closest_point_index;
 
     object_msg.reference_point_location = (uint16_t) object.reference_point_location;
@@ -790,23 +805,30 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
       break;
     }
 
-    object_msg.reference_point_coordinate = object.reference_point_coordinate;
-    object_msg.reference_point_coordinate_sigma = object.reference_point_coordinate_sigma;
+    object_msg.reference_point_coordinate.x = object.reference_point_coordinate.x;
+    object_msg.reference_point_coordinate.y = object.reference_point_coordinate.y;
+
+    object_msg.reference_point_coordinate_sigma.x = object.reference_point_coordinate_sigma.x;
+    object_msg.reference_point_coordinate_sigma.y = object.reference_point_coordinate_sigma.y;
+
     object_msg.object_priority = object.object_priority;
     object_msg.reference_point_position_correction_coefficient = object.reference_point_position_correction_coefficient;
     object_msg.object_priority = object.object_priority;
     object_msg.object_existence_measurement = object.object_existence_measurement;
-    object_msg.absolute_velocity = object.absolute_velocity;
 
+    object_msg.absolute_velocity.x = object.absolute_velocity.x;
+    object_msg.absolute_velocity.y = object.absolute_velocity.y;
+
+    // object.number_of_contour_points;
     int i = 0;
-    for (auto contour_point : contour_point_list)
+    for (auto contour_point : object.contour_point_list)
     {
-      contour_point_list[i].x = contour_point.x;
-      contour_point_list[i].y = contour_point.y;
+      object_msg.contour_point_list[i].x = contour_point.x;
+      object_msg.contour_point_list[i].y = contour_point.y;
       i++;
     }
 
-    new_msg.object_list.push_back(object_msg);
+    new_msg.objects.push_back(object_msg);
 
   }
 
@@ -816,7 +838,7 @@ void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
-  switch( parser_class.image_format )
+  switch( parser_class->image_format )
   {
     case JPEG:
       new_msg.image_format = new_msg.JPEG;
@@ -836,26 +858,26 @@ void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::
 
   }
 
-  new_msg.us_since_power_on = parser_class.us_since_power_on;
-  new_msg.timestamp = ntp_to_ros_time(parser_class.timestamp);
-  new_msg.device_id = parser_class.device_id;
+  new_msg.us_since_power_on = parser_class->us_since_power_on;
+  new_msg.timestamp = ntp_to_ros_time(parser_class->timestamp);
+  new_msg.device_id = parser_class->device_id;
   
-  new_msg.mounting_position.yaw_angle = parser_class.mounting_position.yaw_angle;
-  new_msg.mounting_position.pitch_angle = parser_class.mounting_position.pitch_angle;
-  new_msg.mounting_position.roll_angle = parser_class.mounting_position.roll_angle;
-  new_msg.mounting_position.x_position = parser_class.mounting_position.x_position;
-  new_msg.mounting_position.y_position = parser_class.mounting_position.y_position;
-  new_msg.mounting_position.z_position = parser_class.mounting_position.z_position;
+  new_msg.mounting_position.yaw_angle = parser_class->mounting_position.yaw_angle;
+  new_msg.mounting_position.pitch_angle = parser_class->mounting_position.pitch_angle;
+  new_msg.mounting_position.roll_angle = parser_class->mounting_position.roll_angle;
+  new_msg.mounting_position.x_position = parser_class->mounting_position.x_position;
+  new_msg.mounting_position.y_position = parser_class->mounting_position.y_position;
+  new_msg.mounting_position.z_position = parser_class->mounting_position.z_position;
   
-  new_msg.horizontal_opening_angle = parser_class.horizontal_opening_angle;
-  new_msg.vertical_opening_angle = parser_class.vertical_opening_angle;
-  new_msg.image_width = parser_class.image_width;
-  new_msg.image_height = parser_class.image_height;
-  new_msg.compressed_size = parser_class.compressed_size;
+  new_msg.horizontal_opening_angle = parser_class->horizontal_opening_angle;
+  new_msg.vertical_opening_angle = parser_class->vertical_opening_angle;
+  new_msg.image_width = parser_class->image_width;
+  new_msg.image_height = parser_class->image_height;
+  new_msg.compressed_size = parser_class->compressed_size;
 
-  for( int i = 0; i < parser_class.image_width * parser_class.image_height; i++)
+  for( int i = 0; i < parser_class->image_width * parser_class->image_height; i++)
   {
-    new_msg.image_buffer[i] = parser_class.image_buffer[i];
+    new_msg.image_buffer[i] = parser_class->image_buffer[i];
   }
   
 }
@@ -864,20 +886,20 @@ void IbeoRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ibeo_sc
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
-  new_msg.timestamp = ntp_to_ros_time(parser_class.timestamp);
-  new_msg.scan_number = parser_class.scan_number;
-  new_msg.error_flags = parser_class.error_flags;
-  new_msg.longitudinal_velocity = parser_class.longitudinal_velocity;
-  new_msg.steering_wheel_angle = parser_class.steering_wheel_angle;
-  new_msg.front_wheel_angle = parser_class.front_wheel_angle;
-  new_msg.x_position = parser_class.x_position;
-  new_msg.y_position = parser_class.y_position;
-  new_msg.course_angle = parser_class.course_angle;
-  new_msg.time_difference = parser_class.time_difference;
-  new_msg.x_difference = parser_class.x_difference;
-  new_msg.y_difference = parser_class.y_difference;
-  new_msg.heading_difference = parser_class.heading_difference;
-  new_msg.current_yaw_rate = parser_class.current_yaw_rate;
+  new_msg.timestamp = ntp_to_ros_time(parser_class->timestamp);
+  new_msg.scan_number = parser_class->scan_number;
+  new_msg.error_flags = parser_class->error_flags;
+  new_msg.longitudinal_velocity = parser_class->longitudinal_velocity;
+  new_msg.steering_wheel_angle = parser_class->steering_wheel_angle;
+  new_msg.front_wheel_angle = parser_class->front_wheel_angle;
+  new_msg.x_position = parser_class->x_position;
+  new_msg.y_position = parser_class->y_position;
+  new_msg.course_angle = parser_class->course_angle;
+  new_msg.time_difference = parser_class->time_difference;
+  new_msg.x_difference = parser_class->x_difference;
+  new_msg.y_difference = parser_class->y_difference;
+  new_msg.heading_difference = parser_class->heading_difference;
+  new_msg.current_yaw_rate = parser_class->current_yaw_rate;
 
 }
 
