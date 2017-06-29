@@ -693,6 +693,123 @@ void IbeoRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scala_msg
 void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
+  //uint16_t number_of_objects = parser_class->number_of_objects;
+
+  for (auto object : parser_class->object_list)
+  {
+    ibeo_scala_msgs::Object2280 object_msg;
+
+    object_msg.id = object.id;
+
+    object_msg.tracking_model = (uint8_t) object.tracking_model;
+    object_msg.tracking_model = (object.tracking_model == DYNAMIC ? object_msg.DYNAMIC : object_msg.STATIC);
+
+
+    object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
+    object_msg.motion_model_validated = object.motion_model_validated;
+    object_msg.object_age = object.object_age;
+    object_msg.timestamp = ntp_to_ros_time(object.timestamp);
+    object_msg.object_prediction_age = object.object_prediction_age;
+   
+    switch( object.classification )
+    {
+      case UNCLASSIFIED:
+        object_msg.classification = object_msg.UNCLASSIFIED;
+      break;
+      case UNKNOWN_SMALL:
+        object_msg.classification = object_msg.UNKNOWN_SMALL;
+      break;
+      case UNKNOWN_BIG:
+        object_msg.classification = object_msg.UNKNOWN_BIG;
+      break;
+      case PEDESTRIAN:
+        object_msg.classification = object_msg.PEDESTRIAN;
+      break;
+      case BIKE:
+        object_msg.classification = object_msg.BIKE;
+      break;
+      case CAR:
+        object_msg.classification = object_msg.CAR;
+      break;
+      case TRUCK:
+        object_msg.classification = object_msg.TRUCK;
+      break;
+    }
+
+    object_msg.classification_certainty = object.classification_certainty;
+    object_msg.classification_age = object.classification_age;
+    object_msg.object_box_center = object.object_box_center;
+    object_msg.object_box_center_sigma = object.object_box_center_sigma;
+    object_msg.object_box_size = object.object_box_size;
+    object_msg.object_box_orientation_angle = object.object_box_orientation_angle;
+    object_msg.object_box_orientation_angle_sigma = object.object_box_orientation_angle_sigma;
+    object_msg.relative_velocity = object.relative_velocity;
+    object_msg.relative_velocity_sigma = object.relative_velocity_sigma;
+    object_msg.absolute_velocity = object.absolute_velocity;
+    object_msg.absolute_velocity_sigma = object.absolute_velocity_sigma;
+    object_msg.number_of_contour_points = object.number_of_contour_points;
+    object_msg.closest_point_index = object.closest_point_index;
+
+    object_msg.reference_point_location = (uint16_t) object.reference_point_location;
+    switch(object.reference_point_location)
+    {
+      case COG:
+        object_msg.reference_point_location = object_msg.CENTER_OF_GRAVITY;
+      break;
+      case TOP_FRONT_LEFT_CORNER:
+        object_msg.reference_point_location = object_msg.FRONT_LEFT;
+      break;
+      case TOP_FRONT_RIGHT_CORNER:
+        object_msg.reference_point_location = object_msg.FRONT_RIGHT;
+      break;
+      case BOTTOM_REAR_RIGHT_CORNER:
+        object_msg.reference_point_location = object_msg.REAR_RIGHT;
+      break;
+      case BOTTOM_REAR_LEFT_CORNER:
+        object_msg.reference_point_location = object_msg.REAR_LEFT;
+      break;
+      case CENTER_OF_TOP_FRONT_EDGE:
+        object_msg.reference_point_location = object_msg.FRONT_CENTER;
+      break;
+      case CENTER_OF_RIGHT_EDGE:
+        object_msg.reference_point_location = object_msg.RIGHT_CENTER;
+      break;
+      case CENTER_OF_BOTTOM_REAR_EDGE:
+        object_msg.reference_point_location = object_msg.REAR_CENTER;
+      break;
+      case CENTER_OF_LEFT_EDGE:
+        object_msg.reference_point_location = object_msg.LEFT_CENTER;
+      break;
+      case BOX_CENTER:
+        object_msg.reference_point_location = object_msg.OBJECT_CENTER;
+      break;
+      case INVALID:
+        object_msg.reference_point_location = object_msg.UNKNOWN;
+      break;
+    }
+
+    object_msg.reference_point_coordinate = object.reference_point_coordinate;
+    object_msg.reference_point_coordinate_sigma = object.reference_point_coordinate_sigma;
+    object_msg.object_priority = object.object_priority;
+    object_msg.reference_point_position_correction_coefficient = object.reference_point_position_correction_coefficient;
+    object_msg.object_priority = object.object_priority;
+    object_msg.object_existence_measurement = object.object_existence_measurement;
+    object_msg.absolute_velocity = object.absolute_velocity;
+
+    int i = 0;
+    for (auto contour_point : contour_point_list)
+    {
+      contour_point_list[i].x = contour_point.x;
+      contour_point_list[i].y = contour_point.y;
+      i++;
+    }
+
+    new_msg.object_list.push_back(object_msg);
+
+  }
+
 }
 
 void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::CameraImage &new_msg)
