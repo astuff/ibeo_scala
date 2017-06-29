@@ -863,6 +863,22 @@ void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::
 void IbeoRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ibeo_scala_msgs::HostsVehicleState2805 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.timestamp = ntp_to_ros_time(parser_class.timestamp);
+  new_msg.scan_number = parser_class.scan_number;
+  new_msg.error_flags = parser_class.error_flags;
+  new_msg.longitudinal_velocity = parser_class.longitudinal_velocity;
+  new_msg.steering_wheel_angle = parser_class.steering_wheel_angle;
+  new_msg.front_wheel_angle = parser_class.front_wheel_angle;
+  new_msg.x_position = parser_class.x_position;
+  new_msg.y_position = parser_class.y_position;
+  new_msg.course_angle = parser_class.course_angle;
+  new_msg.time_difference = parser_class.time_difference;
+  new_msg.x_difference = parser_class.x_difference;
+  new_msg.y_difference = parser_class.y_difference;
+  new_msg.heading_difference = parser_class.heading_difference;
+  new_msg.current_yaw_rate = parser_class.current_yaw_rate;
+
 }
 
 void IbeoRosMsgHandler::encode_2806(HostsVehicleState2806* parser_class, ibeo_scala_msgs::HostsVehicleState2806 &new_msg)
