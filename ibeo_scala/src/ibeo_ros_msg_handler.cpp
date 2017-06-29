@@ -815,6 +815,49 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
 void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::CameraImage &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  switch( parser_class.image_format )
+  {
+    case JPEG:
+      new_msg.image_format = new_msg.JPEG;
+      break;
+    case MJPEG:
+      new_msg.image_format = new_msg.MJPEG;
+      break;
+    case GRAY8:
+      new_msg.image_format = new_msg.GRAY8;
+      break;
+    case YUV420:
+      new_msg.image_format = new_msg.YUV420;
+      break;
+    case YUV422:
+      new_msg.image_format = new_msg.YUV422;
+      break;
+
+  }
+
+  new_msg.us_since_power_on = parser_class.us_since_power_on;
+  new_msg.timestamp = ntp_to_ros_time(parser_class.timestamp);
+  new_msg.device_id = parser_class.device_id;
+  
+  new_msg.mounting_position.yaw_angle = parser_class.mounting_position.yaw_angle;
+  new_msg.mounting_position.pitch_angle = parser_class.mounting_position.pitch_angle;
+  new_msg.mounting_position.roll_angle = parser_class.mounting_position.roll_angle;
+  new_msg.mounting_position.x_position = parser_class.mounting_position.x_position;
+  new_msg.mounting_position.y_position = parser_class.mounting_position.y_position;
+  new_msg.mounting_position.z_position = parser_class.mounting_position.z_position;
+  
+  new_msg.horizontal_opening_angle = parser_class.horizontal_opening_angle;
+  new_msg.vertical_opening_angle = parser_class.vertical_opening_angle;
+  new_msg.image_width = parser_class.image_width;
+  new_msg.image_height = parser_class.image_height;
+  new_msg.compressed_size = parser_class.compressed_size;
+
+  for( int i = 0; i < parser_class.image_width * parser_class.image_height; i++)
+  {
+    new_msg.image_buffer[i] = parser_class.image_buffer[i];
+  }
+  
 }
 
 void IbeoRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ibeo_scala_msgs::HostsVehicleState2805 &new_msg)
