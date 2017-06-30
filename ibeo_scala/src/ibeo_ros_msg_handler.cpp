@@ -957,4 +957,9 @@ void IbeoRosMsgHandler::encode_2807(HostsVehicleState2807* parser_class, ibeo_sc
 void IbeoRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs::DeviceStatus &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.scanner_type = parser_class->scanner_type;
+  new_msg.sensor_temperature = parser_class->sensor_temperature;
+  new_msg.frequency = parser_class->frequency;
+
 }
