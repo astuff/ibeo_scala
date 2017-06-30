@@ -906,6 +906,26 @@ void IbeoRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ibeo_sc
 void IbeoRosMsgHandler::encode_2806(HostsVehicleState2806* parser_class, ibeo_scala_msgs::HostsVehicleState2806 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+
+    new_msg.stamp = ntp_to_ros_time(parser_class->timestamp);
+
+    new_msg.distance_x = parser_class->distance_x;
+    new_msg.distance_y = parser_class->distance_y;
+    new_msg.course_angle = parser_class->course_angle;
+    new_msg.longitudinal_velocity = parser_class->longitudinal_velocity;
+    new_msg.yaw_rate = parser_class->yaw_rate;
+    new_msg.steering_wheel_angle = parser_class->steering_wheel_angle;
+    new_msg.cross_acceleration = parser_class->cross_acceleration;
+    new_msg.front_wheel_angle = parser_class->front_wheel_angle;
+    new_msg.vehicle_width = parser_class->vehicle_width;
+    new_msg.vehicle_front_to_front_axle = parser_class->vehicle_front_to_front_axle;
+    new_msg.rear_axle_to_front_axle = parser_class->rear_axle_to_front_axle;
+    new_msg.rear_axle_to_vehicle_rear = parser_class->rear_axle_to_vehicle_rear;
+    new_msg.steer_ratio_poly_0 = parser_class->steer_ratio_poly_0;
+    new_msg.steer_ratio_poly_1 = parser_class->steer_ratio_poly_1;
+    new_msg.steer_ratio_poly_2 = parser_class->steer_ratio_poly_2;
+    new_msg.steer_ratio_poly_3 = parser_class->steer_ratio_poly_3;
+
 }
 
 void IbeoRosMsgHandler::encode_2807(HostsVehicleState2807* parser_class, ibeo_scala_msgs::HostsVehicleState2807 &new_msg)
