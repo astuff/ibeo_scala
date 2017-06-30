@@ -703,8 +703,14 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
 
     object_msg.object_id = object.id;
 
-    object_msg.tracking_model = (uint8_t) object.tracking_model;
-    object_msg.tracking_model = (object.tracking_model == DYNAMIC ? object_msg.DYNAMIC_MODEL : object_msg.STATIC_MODEL);
+    if( object.tracking_model == DYNAMIC )
+    {
+      object_msg.tracking_model = object_msg.DYNAMIC_MODEL;
+    } 
+    else
+    {
+      object_msg.tracking_model = object_msg.STATIC_MODEL;
+    } 
 
 
     object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
