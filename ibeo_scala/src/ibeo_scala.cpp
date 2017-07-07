@@ -114,6 +114,7 @@ int main(int argc, char **argv)
 
     if (is_fusion)
     {
+
       scan_2205_pub = n.advertise<ibeo_scala_msgs::ScanData2205>("parsed_tx/scan_data_2205", 1);
       object_2225_pub = n.advertise<ibeo_scala_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
       object_2280_pub = n.advertise<ibeo_scala_msgs::ObjectData2280>("parsed_tx/object_data_2280", 1);
@@ -137,6 +138,7 @@ int main(int argc, char **argv)
     }
     else
     {
+
       scan_2202_pub = n.advertise<ibeo_scala_msgs::ScanData2202>("parsed_tx/scan_data_2202", 1);
       scan_2208_pub = n.advertise<ibeo_scala_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
       object_2270_pub = n.advertise<ibeo_scala_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
@@ -160,6 +162,7 @@ int main(int argc, char **argv)
     IbeoRosMsgHandler handler_6301(0x6301, device_status_pub);
     handler_list.insert(std::make_pair(0x6301, handler_6301));
 
+
     while (ros::ok())
     {
       buf_size = IBEO_PAYLOAD_SIZE;
@@ -170,6 +173,8 @@ int main(int argc, char **argv)
       buf_size = bytes_read;
 
       int first_mw = find_magic_word(msg_buf, buf_size);
+
+                  printf("magic\n");
 
       if (first_mw > -1)
       {
@@ -193,25 +198,34 @@ int main(int argc, char **argv)
         int mw_offset;
         bool more_magic = true;
 
+        printf("buf_size: %d\n",buf_size);
+
         while (more_magic)
         {
+          printf("2\n");
           unsigned char * new_buf = msg_buf + 1;
           mw_offset = find_magic_word(new_buf, buf_size - 1);
+          printf("3\n");
 
           if (mw_offset > -1)
           {
             //Found another message in this chunk.
             std::vector<unsigned char> last_message(msg_buf, msg_buf + mw_offset);
             messages.push_back(last_message);
+            printf("4\n");
 
             msg_buf = msg_buf + mw_offset + 1; //Point to the beginning of the next message.
             buf_size -= mw_offset; //Reduce the size of the array.
+            printf("5\n");
           }
           else
           {
             more_magic = false;
+            printf("6\n");
           }
         }
+
+
 
         if (!messages.empty())
         {
