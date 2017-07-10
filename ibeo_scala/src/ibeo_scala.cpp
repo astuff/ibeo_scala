@@ -174,8 +174,6 @@ int main(int argc, char **argv)
 
       int first_mw = find_magic_word(msg_buf, buf_size);
 
-                  printf("magic\n");
-
       if (first_mw > -1)
       {
         if (!partial_msg.empty())
@@ -198,34 +196,24 @@ int main(int argc, char **argv)
         int mw_offset;
         bool more_magic = true;
 
-        printf("buf_size: %d\n",buf_size);
-
         while (more_magic)
         {
-          printf("2\n");
           unsigned char * new_buf = msg_buf + 1;
           mw_offset = find_magic_word(new_buf, buf_size - 1);
-          printf("3\n");
 
           if (mw_offset > -1)
           {
             //Found another message in this chunk.
             std::vector<unsigned char> last_message(msg_buf, msg_buf + mw_offset);
             messages.push_back(last_message);
-            printf("4\n");
-
             msg_buf = msg_buf + mw_offset + 1; //Point to the beginning of the next message.
             buf_size -= mw_offset; //Reduce the size of the array.
-            printf("5\n");
           }
           else
           {
             more_magic = false;
-            printf("6\n");
           }
         }
-
-
 
         if (!messages.empty())
         {
@@ -281,10 +269,16 @@ int main(int argc, char **argv)
               {
                 std::vector<IbeoObject> objects = class_parser->get_objects();
               }
+
+            }
+            else
+            {
+              //printf("class parser is NULL\n");
             }
           }
 
           messages.clear();
+          //printf("messages cleared.\n");
         }
 
         if (buf_size > 0)
