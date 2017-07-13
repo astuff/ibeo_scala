@@ -3,6 +3,8 @@
 
 #include <ibeo_scala_core.h>
 #include <ros/ros.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl_conversions/pcl_conversions.h>
 
 //Messages
 #include <network_interface/TCPFrame.h>
@@ -21,6 +23,7 @@
 #include <ibeo_scala_msgs/Point2DFloat.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/PointCloud.h>
 #include <visualization_msgs/MarkerArray.h>
 
 #endif

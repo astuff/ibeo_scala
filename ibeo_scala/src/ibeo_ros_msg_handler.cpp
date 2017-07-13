@@ -983,3 +983,25 @@ void IbeoRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs:
   new_msg.frequency = parser_class->frequency;
 
 }
+
+void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::PointCloud<pcl::PointXYZ> &new_msg)
+{
+
+  //header?
+
+  int i = 0;
+  for( Point3D p : points )
+  {
+    new_msg.points[i].x = p.x;
+    new_msg.points[i].y = p.y;
+    new_msg.points[i].z = p.z;
+    i++;
+  }
+  // channels?
+}
+
+/*void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoScala::>IbeoObject* object, ibeo_scala_msgs::MarkerArray &new_msg)
+{
+  //TODO
+}*/
+

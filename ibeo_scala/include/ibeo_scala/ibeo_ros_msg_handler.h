@@ -11,6 +11,8 @@ class IbeoRosMsgHandler
     IbeoRosMsgHandler(unsigned short type_id, ros::Publisher &pub);
 
     void encode_and_publish(IbeoTxMessage* parser_class, std::string frame_id);
+    void encode_pointcloud(std::vector<Point3D> &points, pcl::PointCloud<pcl::PointXYZ> &new_msg);
+    //void encode_marker_array(std::vector<IbeoScala::>IbeoObject* object, ibeo_scala_msgs::MarkerArray &new_msg);
 
   private:
     unsigned short type_id;
