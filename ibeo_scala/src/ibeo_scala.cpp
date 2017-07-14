@@ -257,8 +257,6 @@ int main(int argc, char **argv)
               //TODO: Figure out what to do with points and objects.
               if (class_parser->has_scan_points)
               {
-
-                printf("class parser 0x%04x has scan points\n", ibeo_header.data_type_id);
                 pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
                 pcl_cloud.header.frame_id = frame_id;
                 pcl_cloud.header.stamp = ibeo_header.time;
@@ -269,8 +267,11 @@ int main(int argc, char **argv)
 
               if (class_parser->has_contour_points)
               {
+                visualization_msgs::MarkerArray marker_array;
                 std::vector<Point3D> contour_points = class_parser->get_contour_points();
-                //TODO
+                msg_handler.encode_marker_array(contour_points, marker_array);
+                object_contour_points_pub.publish(marker_array);
+                
               }
 
               if (class_parser->has_objects)

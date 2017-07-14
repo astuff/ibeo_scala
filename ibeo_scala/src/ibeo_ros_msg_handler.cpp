@@ -986,9 +986,6 @@ void IbeoRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs:
 
 void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::PointCloud<pcl::PointXYZ> &new_msg)
 {
-
-  //header?
-
   for( Point3D p : points )
   {
     pcl::PointXYZ pclp;
@@ -997,12 +994,22 @@ void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::Po
     pclp.z = p.z;
     new_msg.push_back(pclp);
   }
-
-  // channels?
 }
 
-/*void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoScala::>IbeoObject* object, ibeo_scala_msgs::MarkerArray &new_msg)
+void IbeoRosMsgHandler::encode_marker_array(std::vector<Point3D> &points, visualization_msgs::MarkerArray &new_msg)
 {
-  //TODO
-}*/
+  int i = 0, j = 0;
+  visualization_msgs::Marker m;
+  printf("encode %d contour points. ",(int) points.size());
+  for( Point3D p : points )
+  {
+    printf(".");
+    m.points[j].x = p.x;
+    m.points[j].y = p.y;
+    m.points[j].z = p.z;
+    j++;
+  }
+  printf("DONE.\n ");
+  new_msg.markers[i] = m;
+}
 
