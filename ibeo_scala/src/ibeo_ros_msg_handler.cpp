@@ -989,14 +989,15 @@ void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::Po
 
   //header?
 
-  int i = 0;
   for( Point3D p : points )
   {
-    new_msg.points[i].x = p.x;
-    new_msg.points[i].y = p.y;
-    new_msg.points[i].z = p.z;
-    i++;
+    pcl::PointXYZ pclp;
+    pclp.x = p.x;
+    pclp.y = p.y;
+    pclp.z = p.z;
+    new_msg.push_back(pclp);
   }
+
   // channels?
 }
 
