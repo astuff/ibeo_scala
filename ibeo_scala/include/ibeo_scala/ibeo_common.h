@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
+#include <tf/transform_datatypes.h>
 
 //Messages
 #include <network_interface/TCPFrame.h>

@@ -265,27 +265,36 @@ int main(int argc, char **argv)
                 pointcloud_pub.publish(pcl_cloud);
               }
 
-              /*if (class_parser->has_contour_points)
+              if (class_parser->has_contour_points)
               {
                 visualization_msgs::Marker marker;
                 marker.header.frame_id = frame_id;
-                //marker.header.stamp = ibeo_header.time;
+                marker.header.stamp = ros::Time::now();
                 std::vector<Point3D> contour_points = class_parser->get_contour_points();
                 if( contour_points.size() > 0 )
                 {
                   printf("ready to encode %d contour points.\n ", (int) contour_points.size() );
-                  msg_handler.encode_marker_array(contour_points, marker);
+                  msg_handler.encode_contour_points(contour_points, marker);
                   printf("marker array ready to publish with %d contour points. ",marker.points.size());
                   object_contour_points_pub.publish(marker);
                   printf(" DONE.\n");
                 }
                 
-              }*/
+              }
 
               if (class_parser->has_objects)
               {
                 std::vector<IbeoObject> objects = class_parser->get_objects();
                 //TODO
+                visualization_msgs::MarkerArray marker_array;
+                msg_handler.encode_marker_array(objects, marker_array);
+                for( visualization_msgs::Marker m : marker_array.markers )
+                {
+                  m.header.frame_id = frame_id;
+                  m.header.stamp = ros::Time::now();
+                }
+
+                object_markers_pub.publish(marker_array);
               }
 
             }

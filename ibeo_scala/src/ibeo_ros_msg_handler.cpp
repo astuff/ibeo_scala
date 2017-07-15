@@ -996,7 +996,7 @@ void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::Po
   }
 }
 
-void IbeoRosMsgHandler::encode_marker_array(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg)
+void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg)
 {
   printf("encode %d contour points into marker.",(int) points.size());
   int j = 0;
@@ -1012,5 +1012,185 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<Point3D> &points, visual
     new_msg.points.push_back(point);
   }
   printf(" DONE.\n ");
+}
+
+void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, visualization_msgs::MarkerArray &new_msg)
+{
+
+  for( IbeoObject o : objects )
+  {
+    tf::Quaternion quaternion = tf::createQuaternionFromYaw(o.object_box_orientation * 100/180 * M_PI);
+    visualization_msgs::Marker object_marker = createWireframeMarker(o.object_box_center.x, o.object_box_center.y,
+    o.object_box_size.size_x, o.object_box_size.size_y, 0.75);
+    object_marker.id  = o.id;
+    object_marker.pose.orientation.x = quaternion.x();
+    object_marker.pose.orientation.y = quaternion.y();
+    object_marker.pose.orientation.z = quaternion.z();
+    object_marker.pose.orientation.w = quaternion.w();
+    object_marker.lifetime = ros::Duration(0.2);
+    object_marker.color.a = 0.5;
+    object_marker.color.r = object_marker.color.g = object_marker.color.b = 1.0;
+    object_marker.frame_locked = false;
+
+    std::string label;
+    switch (o.classification)
+    {
+      case UNCLASSIFIED:
+        label = "Unclassified";
+        // Unclassified - white
+        break;
+      case UNKNOWN_SMALL:
+        label = "Unknown Small";
+        // Unknown small - blue
+        object_marker.color.r = object_marker.color.g = 0;
+        break;
+      case UNKNOWN_BIG:
+        label = "Unknown Big";
+        // Unknown big - dark blue
+        object_marker.color.r = object_marker.color.g = 0;
+        object_marker.color.b = 0.5;
+        break;
+      case PEDESTRIAN:
+        label = "Pedestrian";
+        // Pedestrian - red
+        object_marker.color.g = object_marker.color.b = 0;
+        break;
+      case BIKE:
+        label = "Bike";
+        // Bike - dark red
+        object_marker.color.g = object_marker.color.b = 0;
+        object_marker.color.r = 0.5;
+        break;
+      case CAR:
+        label = "Car";
+        // Car - green
+        object_marker.color.b = object_marker.color.r = 0;
+        break;
+      case TRUCK:
+        label = "Truck";
+        // Truck - dark green
+        object_marker.color.b = object_marker.color.r = 0;
+        object_marker.color.g = 0.5;
+        break;
+      default:
+        label = "Unknown";
+        object_marker.color.r = object_marker.color.b = object_marker.color.g = 0.0;
+        break;
+    }
+
+    object_marker.ns = label;
+    
+    visualization_msgs::Marker   object_label;
+    object_label.id  = o.id + 1000;
+    object_label.ns = label;
+    object_label.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+    object_label.action = visualization_msgs::Marker::ADD;
+    object_label.pose.position.x = o.object_box_center.x;
+    object_label.pose.position.y = o.object_box_center.y;
+    object_label.pose.position.z = 0.5;
+    object_label.text = label;
+    object_label.scale.z = 0.5;
+    object_label.lifetime = object_marker.lifetime;
+    object_label.color.r = object_label.color.g = object_label.color.b = 1;
+    object_label.color.a = 0.5;
+
+    visualization_msgs::Marker object_point_marker;
+    object_point_marker.type = visualization_msgs::Marker::POINTS;
+    object_point_marker.action = visualization_msgs::Marker::ADD;
+    object_point_marker.ns = label;
+    object_point_marker.lifetime = object_marker.lifetime;
+    object_point_marker.scale.x = 0.05;
+    object_point_marker.scale.y = 0.05;
+    object_point_marker.color.r = 0;
+    object_point_marker.color.g = 1;
+    object_point_marker.color.b = 0;
+    object_point_marker.color.a = 0.7;
+
+
+    new_msg.markers.push_back(object_marker);
+    new_msg.markers.push_back(object_label);
+    new_msg.markers.push_back(object_point_marker);
+
+  }
+
+
+}
+
+visualization_msgs::Marker IbeoRosMsgHandler::createWireframeMarker(float center_x, float center_y, float size_x, float size_y, float size_z)
+{
+  visualization_msgs::Marker box;
+  box.type = visualization_msgs::Marker::LINE_LIST;
+  box.action = visualization_msgs::Marker::ADD;
+  box.pose.position.x = center_x;
+  box.pose.position.y = center_y;
+  box.scale.x = 0.05;
+  geometry_msgs::Point p1, p2, p3, p4, p5, p6, p7, p8;
+
+  size_y = (size_y <= 0.1f)? 0.1f : size_y;
+  size_x = (size_x <= 0.1f)? 0.1f : size_x;
+
+  float half_x = (0.5) * size_x;
+  float half_y = (0.5) * size_y;
+
+  p1.x = half_x;
+  p1.y = half_y;
+  p1.z = size_z;
+  p2.x = half_x;
+  p2.y = -half_y;
+  p2.z = size_z;
+  p3.x = -half_x;
+  p3.y = -half_y;
+  p3.z = size_z;
+  p4.x = -half_x;
+  p4.y = half_y;
+  p4.z = size_z;
+  p5 = p1;
+  p5.z = -size_z;
+  p6 = p2;
+  p6.z = -size_z;
+  p7 = p3;
+  p7.z = -size_z;
+  p8 = p4;
+  p8.z = -size_z;
+
+  box.points.reserve(24);
+  
+  box.points.push_back(p1);
+  box.points.push_back(p2);
+
+  box.points.push_back(p2);
+  box.points.push_back(p3);
+
+  box.points.push_back(p3);
+  box.points.push_back(p4);
+
+  box.points.push_back(p4);
+  box.points.push_back(p1);
+
+  box.points.push_back(p1);
+  box.points.push_back(p5);
+
+  box.points.push_back(p2);
+  box.points.push_back(p6);
+
+  box.points.push_back(p3);
+  box.points.push_back(p7);
+
+  box.points.push_back(p4);
+  box.points.push_back(p8);
+
+  box.points.push_back(p5);
+  box.points.push_back(p6);
+
+  box.points.push_back(p6);
+  box.points.push_back(p7);
+
+  box.points.push_back(p7);
+  box.points.push_back(p8);
+
+  box.points.push_back(p8);
+  box.points.push_back(p5);
+
+  return box;
 }
 
