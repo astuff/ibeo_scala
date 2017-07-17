@@ -1002,6 +1002,13 @@ void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visu
   int j = 0;
   new_msg.ns = "scala";
   new_msg.type = visualization_msgs::Marker::POINTS;
+  new_msg.color.r = 0.0;
+  new_msg.color.g = 1.0;
+  new_msg.color.b = 0.0;
+  new_msg.color.a = 1.0;
+  new_msg.scale.x = 1.0;
+  new_msg.scale.y = 1.0;
+  new_msg.scale.z = 1.0;
 
   for( Point3D p : points )
   {
