@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
   return_statuses status = tcp_interface.open(ip_address.c_str(), port);
 
-  if (status == ok)
+  if (status == OK)
   {
     ros::Publisher eth_tx_pub = n.advertise<network_interface::TCPFrame>("tcp_tx", 10);
     ros::Publisher pointcloud_pub = n.advertise<pcl::PointCloud <pcl::PointXYZ> >("as_tx/point_cloud", 1);
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
       orig_msg_buf = (unsigned char*) malloc(buf_size); //New allocation.
       msg_buf = orig_msg_buf;
 
-      tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
       buf_size = bytes_read;
 
       int first_mw = find_magic_word(msg_buf, buf_size);
@@ -322,9 +322,13 @@ int main(int argc, char **argv)
   }
   else
   {
-    ROS_ERROR("Connection to ScaLa could not be opened");
+    ROS_ERROR("Connection to ScaLa could not be opened. Error no %i", status);
   }
 
-  tcp_interface.close();
+  status = tcp_interface.close();
+
+  if (status != OK)
+    ROS_ERROR("Connection to ScaLa was not properly closed. Error no %i", status);
+
   return 0;
 }
