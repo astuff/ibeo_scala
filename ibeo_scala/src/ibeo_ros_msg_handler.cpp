@@ -1017,6 +1017,7 @@ void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visu
 void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, visualization_msgs::MarkerArray &new_msg)
 {
 
+  std::string frame_id = "/ibeo_scala";
   for( IbeoObject o : objects )
   {
     tf::Quaternion quaternion = tf::createQuaternionFromYaw(o.object_box_orientation * 100/180 * M_PI);
@@ -1079,6 +1080,13 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, vi
     }
 
     object_marker.ns = label;
+    object_marker.type = visualization_msgs::Marker::CUBE;
+    object_marker.action = visualization_msgs::Marker::ADD;
+    object_marker.header.stamp = ros::Time::now();
+    object_marker.header.frame_id = frame_id;
+    object_marker.scale.x = 1.0;
+    object_marker.scale.y = 1.0;
+    object_marker.scale.z = 1.0;
     
     visualization_msgs::Marker   object_label;
     object_label.id  = o.id + 1000;
@@ -1089,22 +1097,29 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, vi
     object_label.pose.position.y = o.object_box_center.y;
     object_label.pose.position.z = 0.5;
     object_label.text = label;
+    object_label.scale.x = 1.0;
+    object_label.scale.y = 1.0;
     object_label.scale.z = 0.5;
     object_label.lifetime = object_marker.lifetime;
     object_label.color.r = object_label.color.g = object_label.color.b = 1;
     object_label.color.a = 0.5;
+    object_label.action = visualization_msgs::Marker::ADD;
+    object_label.header.stamp = ros::Time::now();
+    object_label.header.frame_id = frame_id;
 
     visualization_msgs::Marker object_point_marker;
     object_point_marker.type = visualization_msgs::Marker::POINTS;
-    object_point_marker.action = visualization_msgs::Marker::ADD;
     object_point_marker.ns = label;
     object_point_marker.lifetime = object_marker.lifetime;
     object_point_marker.scale.x = 0.05;
     object_point_marker.scale.y = 0.05;
+    object_point_marker.scale.z = 0.05;
     object_point_marker.color.r = 0;
     object_point_marker.color.g = 1;
     object_point_marker.color.b = 0;
     object_point_marker.color.a = 0.7;
+    object_point_marker.header.stamp = ros::Time::now();
+    object_point_marker.header.frame_id = frame_id;
 
 
     new_msg.markers.push_back(object_marker);

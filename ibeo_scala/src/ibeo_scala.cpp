@@ -285,13 +285,12 @@ int main(int argc, char **argv)
               if (class_parser->has_objects)
               {
                 std::vector<IbeoObject> objects = class_parser->get_objects();
-                //TODO
                 visualization_msgs::MarkerArray marker_array;
                 msg_handler.encode_marker_array(objects, marker_array);
                 for( visualization_msgs::Marker m : marker_array.markers )
                 {
+                  printf("setting marker %d frame_id to %s.\n",m.id, frame_id.c_str());
                   m.header.frame_id = frame_id;
-                  m.header.stamp = ros::Time::now();
                 }
 
                 object_markers_pub.publish(marker_array);
