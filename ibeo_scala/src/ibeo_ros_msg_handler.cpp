@@ -1006,9 +1006,9 @@ void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visu
   new_msg.color.g = 1.0;
   new_msg.color.b = 0.0;
   new_msg.color.a = 1.0;
-  new_msg.scale.x = 1.0;
-  new_msg.scale.y = 1.0;
-  new_msg.scale.z = 1.0;
+  new_msg.scale.x = 0.05;
+  new_msg.scale.y = 0.05;
+  new_msg.scale.z = 0.05;
 
   for( Point3D p : points )
   {
@@ -1035,7 +1035,7 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, vi
     object_marker.pose.orientation.y = quaternion.y();
     object_marker.pose.orientation.z = quaternion.z();
     object_marker.pose.orientation.w = quaternion.w();
-    object_marker.lifetime = ros::Duration(0.2);
+    object_marker.lifetime = ros::Duration(5);
     object_marker.color.a = 0.5;
     object_marker.color.r = object_marker.color.g = object_marker.color.b = 1.0;
     object_marker.frame_locked = false;
@@ -1091,9 +1091,9 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, vi
     object_marker.action = visualization_msgs::Marker::ADD;
     object_marker.header.stamp = ros::Time::now();
     object_marker.header.frame_id = frame_id;
-    object_marker.scale.x = 1.0;
-    object_marker.scale.y = 1.0;
-    object_marker.scale.z = 1.0;
+    object_marker.scale.x = 0.1;
+    object_marker.scale.y = 0.1;
+    object_marker.scale.z = 0.1;
     
     visualization_msgs::Marker   object_label;
     object_label.id  = o.id + 1000;
@@ -1104,8 +1104,8 @@ void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, vi
     object_label.pose.position.y = o.object_box_center.y;
     object_label.pose.position.z = 0.5;
     object_label.text = label;
-    object_label.scale.x = 1.0;
-    object_label.scale.y = 1.0;
+    object_label.scale.x = 0.1;
+    object_label.scale.y = 0.1;
     object_label.scale.z = 0.5;
     object_label.lifetime = object_marker.lifetime;
     object_label.color.r = object_label.color.g = object_label.color.b = 1;
