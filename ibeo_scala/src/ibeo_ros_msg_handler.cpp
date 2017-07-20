@@ -120,6 +120,10 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       printf("publishing device status\n");
 
     } break;
+    default:
+    {
+      printf("nonsense message type.\n");
+    }
   }
 }
 

@@ -266,6 +266,10 @@ int main(int argc, char **argv)
           {
             ROS_INFO("Parsing message %u of %d.", i, messages.size());
             //printf("packet debug: Parsing message %u of %d.\n", i, messages.size());
+            // for(unsigned char c : messages[i])
+            // {
+            //   printf("%02x ",c);
+            // }
             if (publish_raw)
             {
               network_interface::TCPFrame raw_frame;
@@ -344,7 +348,7 @@ int main(int argc, char **argv)
             }
             else
             {
-              ////printf("class parser is NULL\n");
+              printf("class parser for %u byte message of type 0x%04x is NULL\n", messages[i].size(), ibeo_header.data_type_id);
             }
           }
           //printf("packet debug: Clearing %u messages.\n", messages.size());
