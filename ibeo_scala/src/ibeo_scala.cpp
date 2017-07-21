@@ -173,205 +173,112 @@ int main(int argc, char **argv)
       status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
       buf_size = bytes_read;
       grand_buffer.insert( grand_buffer.end() , msg_buf , msg_buf + bytes_read);
-      //printf("packet debug: finished reading %d bytes. Grand buffer is now %d bytes.\n",bytes_read, grand_buffer.size());
-
-
+  
       int first_mw = 0;
-      // if (!partial_msg.empty())
-      // {
-      //   //printf("packet debug: prepending %d remaining bytes from last read.\n", partial_msg.size());
-      //   //We have leftover data from last read and we found
-      //   //a new magic word.
-      //   //Assume that the leftover from last read and anything
-      //   //before the new magic word of this read make a new message.
-
-      //   std::vector<unsigned char> new_part_msg(partial_msg.begin(), partial_msg.end());
-      //   //new_part_msg.insert(new_part_msg.end(), msg_buf, buf_size); 
-      //   //messages.push_back(new_part_msg);
-      //   first_mw = find_magic_word(new_part_msg.data(), new_part_msg.size());
-
-      //   partial_msg.clear();
-      // }
-
-
+      
       int j = 1;
       while( true )
       {
         first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size() );
+        
+        // no magic word found. move along.
         if( first_mw == -1 ) 
         {
-          //printf("packet debug: no magic word found in %u 8-bit bytes.\n", grand_buffer.size());
-          break;
+           break;
         }
-        // else if( first_mw == 0 )
-        // {
-
-        //   grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + (sizeof(MAGIC_WORD) / sizeof( unsigned char)));
-        //   //printf("Magic word is at the front. Removing. Grand buffer is now %d bytes long.\n", grand_buffer.size());
-
-        // }
+        // magic word found. pull out message from grand buffer and add it to the message list.
         else
         {
           std::vector<unsigned char> msg;
           msg.insert(msg.end(),grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
-          // //printf("packet debug: msg: ");
-          // for( unsigned char c : msg )
-          // {
-          //   //printf("%02x ", c);
-          // }
           messages.push_back(msg);
           grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
-          //printf("\npacket debug: found magic word #%d at %d. Grand buffer is now %u bytes long. There are %u messages to be parsed.\n", j++, first_mw, grand_buffer.size(), messages.size());
-          //printf("packet debug: msg size: %u, messages size: %u\n", msg.size(), messages.size());
         }
       }
 
-
-      //if (first_mw > -1)
-      //{
-        ////printf("packet debug: found magic word #1 at %d\n", first_mw);
-          
-        // msg_buf += first_mw; //Point to the byte at the beginning of the first message in this chunk.
-        // buf_size -= first_mw;
-
-        // int mw_offset;
-        // bool more_magic = true;
-
-        // int i = 1;
-        // while (more_magic)
-        // {
-        //   unsigned char * new_buf = msg_buf + 1;
-        //   mw_offset = find_magic_word(new_buf, buf_size - 1);
-          
-
-        //   if (mw_offset > -1)
-        //   {
-        //     //Found another message in this chunk.
-        //     std::vector<unsigned char> last_message(msg_buf, msg_buf + mw_offset);
-        //     messages.push_back(last_message);
-        //     msg_buf = msg_buf + mw_offset + 1; //Point to the beginning of the next message.
-        //     buf_size -= mw_offset; //Reduce the size of the array.
-        //     //printf("packet debug: found magic word #%d at offset %d\n", ++i, mw_offset);
-        //   }
-        //   else
-        //   {
-        //     more_magic = false;
-        //   }
-        // }
-
-        if (!messages.empty())
+      if (!messages.empty())
+      {
+        //Found at least one message, let's parse them.
+        for(unsigned int i = 0; i < messages.size(); i++)
         {
-          //Found at least one message, let's parse them.
-          for(unsigned int i = 0; i < messages.size(); i++)
+          ROS_INFO("Parsing message %u of %lu.", i, messages.size());
+
+          if (publish_raw)
           {
-            ROS_INFO("Parsing message %u of %d.", i, messages.size());
-            //printf("packet debug: Parsing message %u of %d.\n", i, messages.size());
-            // for(unsigned char c : messages[i])
-            // {
-            //   printf("%02x ",c);
-            // }
-            if (publish_raw)
-            {
-              network_interface::TCPFrame raw_frame;
-              raw_frame.address = ip_address;
-              raw_frame.port = port;
-              raw_frame.size = messages[i].size();
-              raw_frame.data.insert(raw_frame.data.begin(), messages[i].begin(), messages[i].end());
-              raw_frame.header.frame_id = frame_id;
-              raw_frame.header.stamp = ros::Time::now();
+            network_interface::TCPFrame raw_frame;
+            raw_frame.address = ip_address;
+            raw_frame.port = port;
+            raw_frame.size = messages[i].size();
+            raw_frame.data.insert(raw_frame.data.begin(), messages[i].begin(), messages[i].end());
+            raw_frame.header.frame_id = frame_id;
+            raw_frame.header.stamp = ros::Time::now();
 
-              eth_tx_pub.publish(raw_frame);
-            }
-
-            ROS_INFO("Size of message: %lu.", messages[i].size());
-
-            IbeoDataHeader ibeo_header;
-            ibeo_header.parse(messages[i].data());
-
-            ROS_INFO("Got message type: 0x%X", ibeo_header.data_type_id);
-
-            auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
-            ROS_INFO("Created class parser.");
-
-            if (class_parser != NULL)
-            {
-              //Only parse message types we know how to handle.
-              class_parser->parse(messages[i].data()); //Parse the raw data into the class.
-              ROS_INFO("Parsed data.");
-              auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
-              ROS_INFO("Created message handler.");
-              msg_handler.encode_and_publish(class_parser, frame_id); //Create a new message of the correct type and publish it.
-              ROS_INFO("Encoded ROS message.");
-
-              //TODO: Figure out what to do with points and objects.
-              if (class_parser->has_scan_points)
-              {
-                pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
-                pcl_cloud.header.frame_id = frame_id;
-                pcl_cloud.header.stamp = ibeo_header.time;
-                std::vector<Point3D> scan_points = class_parser->get_scan_points();
-                msg_handler.encode_pointcloud(scan_points, pcl_cloud);
-                pointcloud_pub.publish(pcl_cloud);
-              }
-
-              if (class_parser->has_contour_points)
-              {
-                visualization_msgs::Marker marker;
-                marker.header.frame_id = frame_id;
-                marker.header.stamp = ros::Time::now();
-                std::vector<Point3D> contour_points = class_parser->get_contour_points();
-                if( contour_points.size() > 0 )
-                {
-                  //printf("ready to encode %d contour points.\n ", (int) contour_points.size() );
-                  msg_handler.encode_contour_points(contour_points, marker);
-                  //printf("marker array ready to publish with %d contour points. ",marker.points.size());
-                  object_contour_points_pub.publish(marker);
-                  //printf(" DONE.\n");
-                }
-                
-              }
-
-              if (class_parser->has_objects)
-              {
-                std::vector<IbeoObject> objects = class_parser->get_objects();
-                visualization_msgs::MarkerArray marker_array;
-                msg_handler.encode_marker_array(objects, marker_array);
-                for( visualization_msgs::Marker m : marker_array.markers )
-                {
-                  //printf("setting marker %d frame_id to %s.\n",m.id, frame_id.c_str());
-                  m.header.frame_id = frame_id;
-                }
-
-                object_markers_pub.publish(marker_array);
-              }
-
-            }
-            else
-            {
-              printf("class parser for %u byte message of type 0x%04x is NULL\n", messages[i].size(), ibeo_header.data_type_id);
-            }
+            eth_tx_pub.publish(raw_frame);
           }
-          //printf("packet debug: Clearing %u messages.\n", messages.size());
-          messages.clear();
 
+          ROS_INFO("Size of message: %lu.", messages[i].size());
+
+          IbeoDataHeader ibeo_header;
+          ibeo_header.parse(messages[i].data());
+
+          ROS_INFO("Got message type: 0x%X", ibeo_header.data_type_id);
+
+          auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
+          ROS_INFO("Created class parser.");
+
+          if (class_parser != NULL)
+          {
+            //Only parse message types we know how to handle.
+            class_parser->parse(messages[i].data()); //Parse the raw data into the class.
+            ROS_INFO("Parsed data.");
+            auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
+            ROS_INFO("Created message handler.");
+            msg_handler.encode_and_publish(class_parser, frame_id); //Create a new message of the correct type and publish it.
+            ROS_INFO("Encoded ROS message.");
+
+            //TODO: Figure out what to do with points and objects.
+            if (class_parser->has_scan_points)
+            {
+              pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
+              pcl_cloud.header.frame_id = frame_id;
+              pcl_cloud.header.stamp = ibeo_header.time;
+              std::vector<Point3D> scan_points = class_parser->get_scan_points();
+              msg_handler.encode_pointcloud(scan_points, pcl_cloud);
+              pointcloud_pub.publish(pcl_cloud);
+            }
+
+            if (class_parser->has_contour_points)
+            {
+              visualization_msgs::Marker marker;
+              marker.header.frame_id = frame_id;
+              marker.header.stamp = ros::Time::now();
+              std::vector<Point3D> contour_points = class_parser->get_contour_points();
+              if( contour_points.size() > 0 )
+              {
+                msg_handler.encode_contour_points(contour_points, marker);
+                object_contour_points_pub.publish(marker);
+              }
+              
+            }
+
+            if (class_parser->has_objects)
+            {
+              std::vector<IbeoObject> objects = class_parser->get_objects();
+              visualization_msgs::MarkerArray marker_array;
+              msg_handler.encode_marker_array(objects, marker_array);
+              for( visualization_msgs::Marker m : marker_array.markers )
+              {
+                m.header.frame_id = frame_id;
+              }
+
+              object_markers_pub.publish(marker_array);
+            }
+
+          }
         }
+        messages.clear();
 
-      
-
-        // if (buf_size > 0)
-        // {
-        //   //We still have data left over. Add it to the next loop.
-        //   partial_msg.insert(partial_msg.end(), msg_buf, msg_buf + buf_size);
-        // }
-      //}
-      // else
-      // {
-      //   //printf("packet debug: no magic word found in this packet. ");
-      //   if( !partial_msg.empty() ) //printf("%d byte partial message remaining. ", partial_msg.size());
-      //   //printf("\n");
-      //   partial_msg.insert(partial_msg.end(), msg_buf, msg_buf + buf_size);
-      // }
-
+      }
       free(orig_msg_buf); //FREE THE BITS
       loop_rate.sleep();
       //ros::spinOnce(); // No callbacks yet - no reason to spin.
