@@ -710,9 +710,13 @@ void IbeoRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scala_msg
 
 void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg)
 {
+  printf("encoding header - ");
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  printf("DONE.\nencoding timestamp - ");
 
   new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
+
+  printf("DONE.\nencoding objects - ");
   //uint16_t number_of_objects = parser_class->number_of_objects;
 
   for (auto object : parser_class->object_list)
@@ -729,13 +733,15 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
     {
       object_msg.tracking_model = object_msg.STATIC_MODEL;
     } 
-
+    printf("\nFinished encoding tracking model\n");
 
     object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
     object_msg.motion_model_validated = object.motion_model_validated;
     object_msg.object_age = object.object_age;
     object_msg.timestamp = ntp_to_ros_time(object.timestamp);
     object_msg.object_prediction_age = object.object_prediction_age;
+
+    printf("finished encoding prediction age\n");
    
     switch( object.classification )
     {
@@ -761,6 +767,8 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
         object_msg.classification = object_msg.TRUCK;
       break;
     }
+
+    printf("finished encoding classification\n");
 
     object_msg.classification_certainty = object.classification_certainty;
     object_msg.classification_age = object.classification_age;
@@ -829,6 +837,8 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
       break;
     }
 
+    printf("finished encoding reference point location\n");
+
     object_msg.reference_point_coordinate.x = object.reference_point_coordinate.x;
     object_msg.reference_point_coordinate.y = object.reference_point_coordinate.y;
 
@@ -843,18 +853,27 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
     object_msg.absolute_velocity.x = object.absolute_velocity.x;
     object_msg.absolute_velocity.y = object.absolute_velocity.y;
 
+    printf("finished encoding velocity\n");
     // object.number_of_contour_points;
     int i = 0;
     for (auto contour_point : object.contour_point_list)
     {
-      object_msg.contour_point_list[i].x = contour_point.x;
-      object_msg.contour_point_list[i].y = contour_point.y;
+      ibeo_scala_msgs::Point2DFloat msg_cp;
+      printf("encoding contour point %d\n", i);
+      msg_cp.x = contour_point.x;
+      msg_cp.y = contour_point.y;
+
+      object_msg.contour_point_list.push_back(msg_cp);
       i++;
     }
+
+    printf("finished encoding contour points\n");
 
     new_msg.objects.push_back(object_msg);
 
   }
+
+  printf("DONE.\n");
 
 }
 

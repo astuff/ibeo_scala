@@ -257,7 +257,6 @@ int main(int argc, char **argv)
             msg_handler.encode_and_publish(class_parser, frame_id); //Create a new message of the correct type and publish it.
             ROS_INFO("Encoded ROS message.");
 
-            //TODO: Figure out what to do with points and objects.
             if (class_parser->has_scan_points)
             {
               pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
