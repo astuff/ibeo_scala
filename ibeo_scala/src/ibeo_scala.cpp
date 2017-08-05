@@ -101,6 +101,7 @@ int main(int argc, char **argv)
 
   if (status == OK)
   {
+    ROS_INFO("TCP Interface connected at %s:%d",ip_address.c_str(),port);
     ros::Publisher eth_tx_pub = n.advertise<network_interface::TCPFrame>("tcp_tx", 10);
     ros::Publisher pointcloud_pub = n.advertise<pcl::PointCloud <pcl::PointXYZ> >("as_tx/point_cloud", 1);
     ros::Publisher object_markers_pub = n.advertise<visualization_msgs::MarkerArray>("as_tx/objects", 1);
@@ -115,6 +116,23 @@ int main(int argc, char **argv)
 
     if (is_fusion)
     {
+
+      ROS_INFO("Sending filter message to fusion ECU");
+      CommandSetFilter cmdToSend;
+      cmdToSend.encode();
+      return_statuses write_status = NO_MESSAGES_RECEIVED;
+
+      for( uint8_t bits : cmdToSend.encoded_data )
+      {
+        printf("%02x ",bits);
+      }
+      printf("\n");
+
+      while( write_status != OK )
+      {
+        write_status = tcp_interface.write(cmdToSend.encoded_data.data(), cmdToSend.encoded_data.size());
+        if( write_status != OK ) ROS_ERROR("Command send failure");
+      }
 
       scan_2205_pub = n.advertise<ibeo_scala_msgs::ScanData2205>("parsed_tx/scan_data_2205", 1);
       object_2225_pub = n.advertise<ibeo_scala_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
@@ -163,6 +181,7 @@ int main(int argc, char **argv)
     IbeoRosMsgHandler handler_6301(0x6301, device_status_pub);
     handler_list.insert(std::make_pair(0x6301, handler_6301));
 
+    ROS_INFO("Setup complete. Starting loop.");
 
     while (ros::ok())
     {
@@ -170,7 +189,9 @@ int main(int argc, char **argv)
       orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size); //New allocation.
       msg_buf = orig_msg_buf;
 
+      printf("getting ready to read some\n");
       status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      printf("done.\n");
       buf_size = bytes_read;
       grand_buffer.insert( grand_buffer.end() , msg_buf , msg_buf + bytes_read);
   
