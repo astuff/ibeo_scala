@@ -189,9 +189,7 @@ int main(int argc, char **argv)
       orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size); //New allocation.
       msg_buf = orig_msg_buf;
 
-      printf("getting ready to read some\n");
       status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
-      printf("done.\n");
       buf_size = bytes_read;
       grand_buffer.insert( grand_buffer.end() , msg_buf , msg_buf + bytes_read);
   
@@ -251,11 +249,8 @@ int main(int argc, char **argv)
           {
             //Only parse message types we know how to handle.
             class_parser->parse(messages[i].data()); //Parse the raw data into the class.
-            ROS_INFO("Parsed data.");
             auto msg_handler = handler_list.at(ibeo_header.data_type_id); //Get a message handler that was created with the correct parameters.
-            ROS_INFO("Created message handler.");
             msg_handler.encode_and_publish(class_parser, frame_id); //Create a new message of the correct type and publish it.
-            ROS_INFO("Encoded ROS message.");
 
             if (class_parser->has_scan_points)
             {
