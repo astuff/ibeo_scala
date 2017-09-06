@@ -166,7 +166,7 @@ int main(int argc, char **argv)
       orig_msg_buf = (unsigned char*) malloc(buf_size); //New allocation.
       msg_buf = orig_msg_buf;
 
-      status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
       buf_size = bytes_read;
 
       int first_mw = find_magic_word(msg_buf, buf_size);
