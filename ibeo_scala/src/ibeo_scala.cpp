@@ -113,6 +113,8 @@ int main(int argc, char **argv)
 
     std::unordered_map<unsigned short, IbeoRosMsgHandler> handler_list;
 
+    ROS_INFO("Ethernet connection to ScaLA established successfully.");
+
     if (is_fusion)
     {
 
@@ -136,6 +138,27 @@ int main(int argc, char **argv)
       handler_list.insert(std::make_pair(0x2403, handler_2403));
       handler_list.insert(std::make_pair(0x2806, handler_2806));
       handler_list.insert(std::make_pair(0x2807, handler_2807));
+
+       
+      CommandSetFilter cmd;
+      cmd.encode();
+
+      return_statuses wstatus = tcp_interface.write(cmd.encoded_data.data(), cmd.encoded_data.size());
+      printf("set filter command: ");
+      for( unsigned char c : cmd.encoded_data )
+      {
+        printf("%02x ",c);
+      }
+      printf("\n");
+      
+      if(status == OK)
+      {
+        ROS_INFO("Wrote command to set filter.");
+      }
+      else
+      {
+        ROS_ERROR("Failed to write set filter command.");
+      }
     }
     else
     {
@@ -167,14 +190,21 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
       buf_size = IBEO_PAYLOAD_SIZE;
-      orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size); //New allocation.
+      orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size + 1); //New allocation.
       msg_buf = orig_msg_buf;
 
-      status = tcp_interface.read_some(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      printf("calling network_interface.read_exactly(buf, %u, %u)\n", buf_size, bytes_read);
+
+      //status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      status = tcp_interface.read_exactly(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+
+      printf("network_interface.read(...) returned status %d", status);
+
       buf_size = bytes_read;
       grand_buffer.insert( grand_buffer.end() , msg_buf , msg_buf + bytes_read);
   
       int first_mw = 0;
+      ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
       
       int j = 1;
       while( true )
