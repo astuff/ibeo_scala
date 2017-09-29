@@ -711,9 +711,7 @@ void IbeoRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scala_msg
 void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
-
   new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
-  //uint16_t number_of_objects = parser_class->number_of_objects;
 
   for (auto object : parser_class->object_list)
   {
@@ -729,7 +727,6 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
     {
       object_msg.tracking_model = object_msg.STATIC_MODEL;
     } 
-
 
     object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
     object_msg.motion_model_validated = object.motion_model_validated;
@@ -842,20 +839,21 @@ void IbeoRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msg
 
     object_msg.absolute_velocity.x = object.absolute_velocity.x;
     object_msg.absolute_velocity.y = object.absolute_velocity.y;
-
     // object.number_of_contour_points;
     int i = 0;
     for (auto contour_point : object.contour_point_list)
     {
-      object_msg.contour_point_list[i].x = contour_point.x;
-      object_msg.contour_point_list[i].y = contour_point.y;
+      ibeo_scala_msgs::Point2DFloat msg_cp;
+      msg_cp.x = contour_point.x;
+      msg_cp.y = contour_point.y;
+
+      object_msg.contour_point_list.push_back(msg_cp);
       i++;
     }
 
     new_msg.objects.push_back(object_msg);
 
   }
-
 }
 
 void IbeoRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::CameraImage &new_msg)
