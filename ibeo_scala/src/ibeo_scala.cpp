@@ -214,8 +214,8 @@ int main(int argc, char **argv)
 
       printf("calling network_interface.read_exactly(buf, %u, %u)\n", buf_size, bytes_read);
 
-      //status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
-      status = tcp_interface.read_exactly(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
+      //status = tcp_interface.read_exactly(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
 
       printf("network_interface.read(...) returned status %d", status);
 
