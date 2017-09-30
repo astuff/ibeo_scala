@@ -1000,7 +1000,7 @@ void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::Po
 
 void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg)
 {
-  printf("encode %d contour points into marker.",(int) points.size());
+  printf("encode %d contour points into marker: ",(int) points.size());
   int j = 0;
   new_msg.ns = "scala";
   new_msg.type = visualization_msgs::Marker::POINTS;
@@ -1014,6 +1014,7 @@ void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visu
 
   for( Point3D p : points )
   {
+    printf( "[%f %f] ", p.x, p.y);
     geometry_msgs::Point point;
     point.x = p.x;
     point.y = p.y;

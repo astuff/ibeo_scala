@@ -212,18 +212,13 @@ int main(int argc, char **argv)
       orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size + 1); //New allocation.
       msg_buf = orig_msg_buf;
 
-      printf("calling network_interface.read_exactly(buf, %u, %u)\n", buf_size, bytes_read);
-
       status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
-      //status = tcp_interface.read_exactly(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
-
-      printf("network_interface.read(...) returned status %d", status);
-
+ 
       buf_size = bytes_read;
       grand_buffer.insert( grand_buffer.end() , msg_buf , msg_buf + bytes_read);
   
       int first_mw = 0;
-      ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
+      //ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
       
       int j = 1;
       while( true )
