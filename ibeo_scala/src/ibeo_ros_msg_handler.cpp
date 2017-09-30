@@ -8,7 +8,7 @@ IbeoRosMsgHandler::IbeoRosMsgHandler(unsigned short type_id, ros::Publisher &pub
 
 void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::string frame_id)
 {
-  printf("encode and publish: 0x%01x\n",type_id);
+  //printf("encode and publish: 0x%01x\n",type_id);
   switch (type_id)
   {
     case 0x2202:
@@ -18,7 +18,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing scan data\n");
+      //printf("publishing scan data\n");
     } break;
     case 0x2205:
     {
@@ -27,7 +27,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing scan data\n");
+      //printf("publishing scan data\n");
     } break;
     case 0x2208:
     {
@@ -36,7 +36,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing scan data\n");
+      //printf("publishing scan data\n");
     } break;
     case 0x2225:
     {
@@ -45,7 +45,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing object data\n");
+      //printf("publishing object data\n");
     } break;
     case 0x2270:
     {
@@ -54,7 +54,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing object data\n");
+      //printf("publishing object data\n");
     } break;
     case 0x2271:
     {
@@ -63,7 +63,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing object data\n");
+      //printf("publishing object data\n");
     } break;
     case 0x2280:
     {
@@ -72,7 +72,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing object data\n");
+      //printf("publishing object data\n");
     } break;
     case 0x2403:
     {
@@ -81,7 +81,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing camera image\n");
+      //printf("publishing camera image\n");
     } break;
     case 0x2805:
     {
@@ -90,7 +90,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing host vehicle state\n");
+      //printf("publishing host vehicle state\n");
     } break;
     case 0x2806:
     {
@@ -99,7 +99,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing host vehicle state\n");
+      //printf("publishing host vehicle state\n");
     } break;
     case 0x2807:
     {
@@ -108,7 +108,7 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing host vehicle state\n");
+      //printf("publishing host vehicle state\n");
     } break;
     case 0x6301:
     {
@@ -117,12 +117,12 @@ void IbeoRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::str
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
-      printf("publishing device status\n");
+      //printf("publishing device status\n");
 
     } break;
     default:
     {
-      printf("nonsense message type.\n");
+      //printf("nonsense message type.\n");
     }
   }
 }
@@ -1000,7 +1000,7 @@ void IbeoRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::Po
 
 void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg)
 {
-  printf("encode %d contour points into marker: ",(int) points.size());
+  //printf("encode %d contour points into marker: ",(int) points.size());
   int j = 0;
   new_msg.ns = "scala";
   new_msg.type = visualization_msgs::Marker::POINTS;
@@ -1014,14 +1014,14 @@ void IbeoRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visu
 
   for( Point3D p : points )
   {
-    printf( "[%f %f] ", p.x, p.y);
+    ////printf( "[%f %f] ", p.x, p.y);
     geometry_msgs::Point point;
     point.x = p.x;
     point.y = p.y;
     point.z = p.z;
     new_msg.points.push_back(point);
   }
-  printf(" DONE.\n ");
+  //printf(" DONE.\n ");
 }
 
 void IbeoRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, visualization_msgs::MarkerArray &new_msg)

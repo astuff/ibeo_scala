@@ -124,11 +124,11 @@ int main(int argc, char **argv)
       cmdToSend.encode();
       return_statuses write_status = NO_MESSAGES_RECEIVED;
 
-      for( uint8_t bits : cmdToSend.encoded_data )
-      {
-        printf("%02x ",bits);
-      }
-      printf("\n");
+      // for( uint8_t bits : cmdToSend.encoded_data )
+      // {
+      //   printf("%02x ",bits);
+      // }
+      // printf("\n");
 
       while( write_status != OK )
       {
@@ -162,12 +162,12 @@ int main(int argc, char **argv)
       cmd.encode();
 
       return_statuses wstatus = tcp_interface.write(cmd.encoded_data.data(), cmd.encoded_data.size());
-      printf("set filter command: ");
-      for( unsigned char c : cmd.encoded_data )
-      {
-        printf("%02x ",c);
-      }
-      printf("\n");
+      // printf("set filter command: ");
+      // for( unsigned char c : cmd.encoded_data )
+      // {
+      //   printf("%02x ",c);
+      // }
+      // printf("\n");
       
       if(status == OK)
       {
