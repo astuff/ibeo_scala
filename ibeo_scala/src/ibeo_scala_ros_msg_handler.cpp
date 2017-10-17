@@ -131,7 +131,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
 
 ros::Time IbeoScalaRosMsgHandler::ntp_to_ros_time(NTPTime time)
 {
-  return ros::Time(((time & 0xFFFF0000) >> 32), (time & 0x0000FFFF));
+    return ros::Time(((time & 0xFFFF0000) >> 32), (time & 0x0000FFFF));
 }
 
 void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ibeo_scala_msgs::IbeoDataHeader &msg_header)
