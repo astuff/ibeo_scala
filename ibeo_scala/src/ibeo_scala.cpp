@@ -138,22 +138,22 @@ int main(int argc, char **argv)
       object_2225_pub = n.advertise<ibeo_scala_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
       object_2280_pub = n.advertise<ibeo_scala_msgs::ObjectData2280>("parsed_tx/object_data_2280", 1);
       camera_image_pub = n.advertise<ibeo_scala_msgs::CameraImage>("parsed_tx/camera_image", 1);
-      vehicle_state_2806_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
-      vehicle_state_2807_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
+      vehicle_state_2806_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
+      vehicle_state_2807_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
 
-      IbeoScalaRosMsgHandler handler_2205(0x2205, scan_2205_pub);
-      IbeoScalaRosMsgHandler handler_2225(0x2225, object_2225_pub);
-      IbeoScalaRosMsgHandler handler_2280(0x2280, object_2280_pub);
-      IbeoScalaRosMsgHandler handler_2403(0x2403, camera_image_pub);
-      IbeoScalaRosMsgHandler handler_2806(0x2806, vehicle_state_2806_pub);
-      IbeoScalaRosMsgHandler handler_2807(0x2807, vehicle_state_2807_pub);
+      IbeoScalaRosMsgHandler handler_2205(ScanData2205::DATA_TYPE, scan_2205_pub);
+      IbeoScalaRosMsgHandler handler_2225(ObjectData2225::DATA_TYPE, object_2225_pub);
+      IbeoScalaRosMsgHandler handler_2280(ObjectData2280::DATA_TYPE, object_2280_pub);
+      IbeoScalaRosMsgHandler handler_2403(CameraImage::DATA_TYPE, camera_image_pub);
+      IbeoScalaRosMsgHandler handler_2806(HostVehicleState2806::DATA_TYPE, vehicle_state_2806_pub);
+      IbeoScalaRosMsgHandler handler_2807(HostVehicleState2807::DATA_TYPE, vehicle_state_2807_pub);
 
-      handler_list.insert(std::make_pair(0x2205, handler_2205));
-      handler_list.insert(std::make_pair(0x2225, handler_2225));
-      handler_list.insert(std::make_pair(0x2280, handler_2280));
-      handler_list.insert(std::make_pair(0x2403, handler_2403));
-      handler_list.insert(std::make_pair(0x2806, handler_2806));
-      handler_list.insert(std::make_pair(0x2807, handler_2807));
+      handler_list.insert(std::make_pair(ScanData2205::DATA_TYPE, handler_2205));
+      handler_list.insert(std::make_pair(ObjectData2225::DATA_TYPE, handler_2225));
+      handler_list.insert(std::make_pair(ObjectData2280::DATA_TYPE, handler_2280));
+      handler_list.insert(std::make_pair(CameraImage::DATA_TYPE, handler_2403));
+      handler_list.insert(std::make_pair(HostVehicleState2806::DATA_TYPE, handler_2806));
+      handler_list.insert(std::make_pair(HostVehicleState2807::DATA_TYPE, handler_2807));
        
       CommandSetFilter cmd;
       cmd.encode();
@@ -175,25 +175,25 @@ int main(int argc, char **argv)
       scan_2208_pub = n.advertise<ibeo_scala_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
       object_2270_pub = n.advertise<ibeo_scala_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
       object_2271_pub = n.advertise<ibeo_scala_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
-      vehicle_state_2805_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
+      vehicle_state_2805_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
 
-      IbeoScalaRosMsgHandler handler_2202(0x2202, scan_2202_pub);
-      IbeoScalaRosMsgHandler handler_2208(0x2208, scan_2208_pub);
-      IbeoScalaRosMsgHandler handler_2270(0x2270, object_2270_pub);
-      IbeoScalaRosMsgHandler handler_2271(0x2271, object_2271_pub);
-      IbeoScalaRosMsgHandler handler_2805(0x2805, vehicle_state_2805_pub);
+      IbeoScalaRosMsgHandler handler_2202(ScanData2202::DATA_TYPE, scan_2202_pub);
+      IbeoScalaRosMsgHandler handler_2208(ScanData2208::DATA_TYPE, scan_2208_pub);
+      IbeoScalaRosMsgHandler handler_2270(ObjectData2270::DATA_TYPE, object_2270_pub);
+      IbeoScalaRosMsgHandler handler_2271(ObjectData2271::DATA_TYPE, object_2271_pub);
+      IbeoScalaRosMsgHandler handler_2805(HostVehicleState2805::DATA_TYPE, vehicle_state_2805_pub);
 
-      handler_list.insert(std::make_pair(0x2202, handler_2202));
-      handler_list.insert(std::make_pair(0x2208, handler_2208));
-      handler_list.insert(std::make_pair(0x2270, handler_2270));
-      handler_list.insert(std::make_pair(0x2271, handler_2271));
-      handler_list.insert(std::make_pair(0x2805, handler_2805));
+      handler_list.insert(std::make_pair(ScanData2202::DATA_TYPE, handler_2202));
+      handler_list.insert(std::make_pair(ScanData2208::DATA_TYPE, handler_2208));
+      handler_list.insert(std::make_pair(ObjectData2270::DATA_TYPE, handler_2270));
+      handler_list.insert(std::make_pair(ObjectData2271::DATA_TYPE, handler_2271));
+      handler_list.insert(std::make_pair(HostVehicleState2805::DATA_TYPE, handler_2805));
     }
 
     device_status_pub = n.advertise<ibeo_scala_msgs::DeviceStatus>("parsed_tx/device_status", 1);
 
-    IbeoScalaRosMsgHandler handler_6301(0x6301, device_status_pub);
-    handler_list.insert(std::make_pair(0x6301, handler_6301));
+    IbeoScalaRosMsgHandler handler_6301(DeviceStatus::DATA_TYPE, device_status_pub);
+    handler_list.insert(std::make_pair(DeviceStatus::DATA_TYPE, handler_6301));
 
     ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
 

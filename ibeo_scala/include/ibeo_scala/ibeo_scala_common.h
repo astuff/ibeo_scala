@@ -17,9 +17,9 @@
 #include <ibeo_scala_msgs/ObjectData2271.h>
 #include <ibeo_scala_msgs/ObjectData2280.h>
 #include <ibeo_scala_msgs/CameraImage.h>
-#include <ibeo_scala_msgs/HostsVehicleState2805.h>
-#include <ibeo_scala_msgs/HostsVehicleState2806.h>
-#include <ibeo_scala_msgs/HostsVehicleState2807.h>
+#include <ibeo_scala_msgs/HostVehicleState2805.h>
+#include <ibeo_scala_msgs/HostVehicleState2806.h>
+#include <ibeo_scala_msgs/HostVehicleState2807.h>
 #include <ibeo_scala_msgs/DeviceStatus.h>
 #include <ibeo_scala_msgs/Point2DFloat.h>
 #include <geometry_msgs/Point.h>

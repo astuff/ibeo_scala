@@ -36,9 +36,9 @@ namespace IbeoScala
       void encode_2271(ObjectData2271* parser_class, ibeo_scala_msgs::ObjectData2271 &new_msg);
       void encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg);
       void encode_2403(CameraImage* parser_class, ibeo_scala_msgs::CameraImage &new_msg);
-      void encode_2805(HostsVehicleState2805* parser_class, ibeo_scala_msgs::HostsVehicleState2805 &new_msg);
-      void encode_2806(HostsVehicleState2806* parser_class, ibeo_scala_msgs::HostsVehicleState2806 &new_msg);
-      void encode_2807(HostsVehicleState2807* parser_class, ibeo_scala_msgs::HostsVehicleState2807 &new_msg);
+      void encode_2805(HostVehicleState2805* parser_class, ibeo_scala_msgs::HostVehicleState2805 &new_msg);
+      void encode_2806(HostVehicleState2806* parser_class, ibeo_scala_msgs::HostVehicleState2806 &new_msg);
+      void encode_2807(HostVehicleState2807* parser_class, ibeo_scala_msgs::HostVehicleState2807 &new_msg);
       void encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs::DeviceStatus &new_msg);
       visualization_msgs::Marker createWireframeMarker(float center_x, float center_y, float size_x, float size_y, float size_z);
   };

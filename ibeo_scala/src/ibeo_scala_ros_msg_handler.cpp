@@ -87,8 +87,8 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2805:
     {
-      ibeo_scala_msgs::HostsVehicleState2805 new_msg;
-      encode_2805((HostsVehicleState2805*)parser_class, new_msg);
+      ibeo_scala_msgs::HostVehicleState2805 new_msg;
+      encode_2805((HostVehicleState2805*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
@@ -96,8 +96,8 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2806:
     {
-      ibeo_scala_msgs::HostsVehicleState2806 new_msg;
-      encode_2806((HostsVehicleState2806*)parser_class, new_msg);
+      ibeo_scala_msgs::HostVehicleState2806 new_msg;
+      encode_2806((HostVehicleState2806*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
@@ -105,8 +105,8 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2807:
     {
-      ibeo_scala_msgs::HostsVehicleState2807 new_msg;
-      encode_2807((HostsVehicleState2807*)parser_class, new_msg);
+      ibeo_scala_msgs::HostVehicleState2807 new_msg;
+      encode_2807((HostVehicleState2807*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
       pub.publish(new_msg);
@@ -906,7 +906,7 @@ void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_m
   
 }
 
-void IbeoScalaRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ibeo_scala_msgs::HostsVehicleState2805 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2805(HostVehicleState2805* parser_class, ibeo_scala_msgs::HostVehicleState2805 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -927,7 +927,7 @@ void IbeoScalaRosMsgHandler::encode_2805(HostsVehicleState2805* parser_class, ib
 
 }
 
-void IbeoScalaRosMsgHandler::encode_2806(HostsVehicleState2806* parser_class, ibeo_scala_msgs::HostsVehicleState2806 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2806(HostVehicleState2806* parser_class, ibeo_scala_msgs::HostVehicleState2806 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -952,7 +952,7 @@ void IbeoScalaRosMsgHandler::encode_2806(HostsVehicleState2806* parser_class, ib
 
 }
 
-void IbeoScalaRosMsgHandler::encode_2807(HostsVehicleState2807* parser_class, ibeo_scala_msgs::HostsVehicleState2807 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2807(HostVehicleState2807* parser_class, ibeo_scala_msgs::HostVehicleState2807 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
