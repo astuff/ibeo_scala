@@ -11,6 +11,9 @@ class IbeoRosMsgHandler
     IbeoRosMsgHandler(unsigned short type_id, ros::Publisher &pub);
 
     void encode_and_publish(IbeoTxMessage* parser_class, std::string frame_id);
+    void encode_pointcloud(std::vector<Point3D> &points, pcl::PointCloud<pcl::PointXYZ> &new_msg);
+    void encode_contour_points(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg);
+    void encode_marker_array(std::vector<IbeoObject> &objects, visualization_msgs::MarkerArray &new_msg);
 
   private:
     unsigned short type_id;
@@ -32,6 +35,7 @@ class IbeoRosMsgHandler
     void encode_2806(HostsVehicleState2806* parser_class, ibeo_scala_msgs::HostsVehicleState2806 &new_msg);
     void encode_2807(HostsVehicleState2807* parser_class, ibeo_scala_msgs::HostsVehicleState2807 &new_msg);
     void encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs::DeviceStatus &new_msg);
+    visualization_msgs::Marker createWireframeMarker(float center_x, float center_y, float size_x, float size_y, float size_z);
 };
 
 #endif

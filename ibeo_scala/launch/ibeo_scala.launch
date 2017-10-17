@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="frame_id" default="scala" />
+  <arg name="frame_id" default="/ibeo_scala" />
   <arg name="ip_address" default="10.152.42.111" />
   <arg name="port" default="12004" />
   <arg name="is_fusion" default="false" />
