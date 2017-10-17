@@ -61,37 +61,39 @@ int main(int argc, char **argv)
 
 	if (priv.getParam("ip_address", ip_address))
 	{ 
-		ROS_INFO("Got ip_address: %s", ip_address.c_str());
+		ROS_INFO("Ibeo ScaLa - Got ip_address: %s", ip_address.c_str());
+
 		if (ip_address == "" )
 		{
-		 ROS_ERROR("IP Address Invalid");
+		 ROS_ERROR("Ibeo ScaLa - IP Address Invalid");
 		 exit = true;
 		}
 	}
 
 	if (priv.getParam("port", port))
 	{ 
-		ROS_INFO("Got port: %d", port);
+		ROS_INFO("Ibeo ScaLa - Got port: %d", port);
+
 		if (port < 0)
 		{
-		 ROS_ERROR("Port Invalid");
+		 ROS_ERROR("Ibeo ScaLa - Port Invalid");
 		 exit = true;
 		}
 	}
   
 	if (priv.getParam("is_fusion", is_fusion))
 	{ 
-		ROS_INFO("is Fusion ECU: %s", (is_fusion)? "true" : "false");
+		ROS_INFO("Ibeo ScaLa - Is Fusion ECU: %s", (is_fusion)? "true" : "false");
 	}
 
-	if (priv.getParam("sensor_frame_id", frame_id))
+	if (priv.getParam("Ibeo ScaLa - sensor_frame_id", frame_id))
 	{
-		ROS_INFO("Got sensor frame ID: %s", frame_id.c_str());
+		ROS_INFO("Ibeo ScaLa - Got sensor frame ID: %s", frame_id.c_str());
 	}
 
-  if (priv.getParam("publish_raw_data", publish_raw))
+  if (priv.getParam("Ibeo ScaLa - publish_raw_data", publish_raw))
   {
-    ROS_INFO("Publish raw data: %s", publish_raw ? "true" : "false");
+    ROS_INFO("Ibeo ScaLa - Publish raw data: %s", publish_raw ? "true" : "false");
   }
 
 	if(exit)
@@ -101,7 +103,8 @@ int main(int argc, char **argv)
 
   if (status == OK)
   {
-    ROS_INFO("TCP Interface connected at %s:%d",ip_address.c_str(),port);
+    ROS_DEBUG("Ibeo ScaLa - TCP Interface connected at %s:%d",ip_address.c_str(),port);
+
     ros::Publisher eth_tx_pub = n.advertise<network_interface::TCPFrame>("tcp_tx", 10);
     ros::Publisher pointcloud_pub = n.advertise<pcl::PointCloud <pcl::PointXYZ> >("as_tx/point_cloud", 1);
     ros::Publisher object_markers_pub = n.advertise<visualization_msgs::MarkerArray>("as_tx/objects", 1);
@@ -114,26 +117,21 @@ int main(int argc, char **argv)
 
     std::unordered_map<unsigned short, IbeoScalaRosMsgHandler> handler_list;
 
-    ROS_INFO("Ethernet connection to ScaLA established successfully.");
+    ROS_DEBUG("Ibeo ScaLa - Ethernet connection to ScaLa established successfully.");
 
     if (is_fusion)
     {
+      ROS_DEBUG("Ibeo ScaLa - Sending filter message to fusion ECU");
 
-      ROS_INFO("Sending filter message to fusion ECU");
       CommandSetFilter cmdToSend;
       cmdToSend.encode();
-      return_statuses write_status = NO_MESSAGES_RECEIVED;
 
-      // for( uint8_t bits : cmdToSend.encoded_data )
-      // {
-      //   printf("%02x ",bits);
-      // }
-      // printf("\n");
+      return_statuses write_status = NO_MESSAGES_RECEIVED;
 
       while( write_status != OK )
       {
         write_status = tcp_interface.write(cmdToSend.encoded_data.data(), cmdToSend.encoded_data.size());
-        if( write_status != OK ) ROS_ERROR("Command send failure");
+        if( write_status != OK ) ROS_ERROR("Ibeo ScaLa - Command send failure");
       }
 
       scan_2205_pub = n.advertise<ibeo_scala_msgs::ScanData2205>("parsed_tx/scan_data_2205", 1);
@@ -156,31 +154,23 @@ int main(int argc, char **argv)
       handler_list.insert(std::make_pair(0x2403, handler_2403));
       handler_list.insert(std::make_pair(0x2806, handler_2806));
       handler_list.insert(std::make_pair(0x2807, handler_2807));
-
        
       CommandSetFilter cmd;
       cmd.encode();
 
       return_statuses wstatus = tcp_interface.write(cmd.encoded_data.data(), cmd.encoded_data.size());
-      // printf("set filter command: ");
-      // for( unsigned char c : cmd.encoded_data )
-      // {
-      //   printf("%02x ",c);
-      // }
-      // printf("\n");
       
       if(status == OK)
       {
-        ROS_INFO("Wrote command to set filter.");
+        ROS_INFO("Ibeo ScaLa - Wrote command to set filter.");
       }
       else
       {
-        ROS_ERROR("Failed to write set filter command.");
+        ROS_ERROR("Ibeo ScaLa - Failed to write set filter command.");
       }
     }
     else
     {
-
       scan_2202_pub = n.advertise<ibeo_scala_msgs::ScanData2202>("parsed_tx/scan_data_2202", 1);
       scan_2208_pub = n.advertise<ibeo_scala_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
       object_2270_pub = n.advertise<ibeo_scala_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
@@ -201,10 +191,11 @@ int main(int argc, char **argv)
     }
 
     device_status_pub = n.advertise<ibeo_scala_msgs::DeviceStatus>("parsed_tx/device_status", 1);
+
     IbeoScalaRosMsgHandler handler_6301(0x6301, device_status_pub);
     handler_list.insert(std::make_pair(0x6301, handler_6301));
 
-    ROS_INFO("Setup complete. Starting loop.");
+    ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
 
     while (ros::ok())
     {
@@ -220,7 +211,8 @@ int main(int argc, char **argv)
       //ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
       
       int j = 1;
-      while( true )
+
+      while (true)
       {
         first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size() );
         
@@ -244,7 +236,7 @@ int main(int argc, char **argv)
         //Found at least one message, let's parse them.
         for(unsigned int i = 0; i < messages.size(); i++)
         {
-          ROS_INFO("Parsing message %u of %lu.", i, messages.size());
+          ROS_DEBUG("Ibeo ScaLa - Parsing message %u of %lu.", i, messages.size());
 
           if (publish_raw)
           {
@@ -259,15 +251,16 @@ int main(int argc, char **argv)
             eth_tx_pub.publish(raw_frame);
           }
 
-          ROS_INFO("Size of message: %lu.", messages[i].size());
+          ROS_DEBUG("Ibeo ScaLa - Size of message: %lu.", messages[i].size());
 
           IbeoDataHeader ibeo_header;
           ibeo_header.parse(messages[i].data());
 
-          ROS_INFO("Got message type: 0x%X", ibeo_header.data_type_id);
+          ROS_DEBUG("Ibeo ScaLa - Got message type: 0x%X", ibeo_header.data_type_id);
 
           auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
-          ROS_INFO("Created class parser.");
+
+          ROS_DEBUG("Ibeo ScaLa - Created class parser.");
 
           if (class_parser != NULL)
           {
@@ -293,12 +286,12 @@ int main(int argc, char **argv)
               marker.header.frame_id = frame_id;
               marker.header.stamp = ros::Time::now();
               std::vector<Point3D> contour_points = class_parser->get_contour_points();
+
               if( contour_points.size() > 0 )
               {
                 msg_handler.encode_contour_points(contour_points, marker);
                 object_contour_points_pub.publish(marker);
               }
-              
             }
 
             if (class_parser->has_objects)
@@ -306,6 +299,7 @@ int main(int argc, char **argv)
               std::vector<IbeoObject> objects = class_parser->get_objects();
               visualization_msgs::MarkerArray marker_array;
               msg_handler.encode_marker_array(objects, marker_array);
+
               for( visualization_msgs::Marker m : marker_array.markers )
               {
                 m.header.frame_id = frame_id;
@@ -326,13 +320,13 @@ int main(int argc, char **argv)
   }
   else
   {
-    ROS_ERROR("Connection to ScaLa could not be opened. Error no %i", status);
+    ROS_ERROR("Ibeo ScaLa - Connection to ScaLa could not be opened. Error no %i", status);
   }
 
   status = tcp_interface.close();
 
   if (status != OK)
-    ROS_ERROR("Connection to ScaLa was not properly closed. Error no %i", status);
+    ROS_ERROR("Ibeo ScaLa - Connection to ScaLa was not properly closed. Error no %i", status);
 
   return 0;
 }
