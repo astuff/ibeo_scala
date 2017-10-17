@@ -281,7 +281,8 @@ int main(int argc, char **argv)
             {
               pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
               pcl_cloud.header.frame_id = frame_id;
-              pcl_cloud.header.stamp = ibeo_header.time;
+              //pcl_cloud.header.stamp = ibeo_header.time;
+              pcl_conversions::toPCL(ros::Time::now(), pcl_cloud.header.stamp);
               std::vector<Point3D> scan_points = class_parser->get_scan_points();
               msg_handler.encode_pointcloud(scan_points, pcl_cloud);
               pointcloud_pub.publish(pcl_cloud);
