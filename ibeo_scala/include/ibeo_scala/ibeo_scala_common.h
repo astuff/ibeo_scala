@@ -1,5 +1,5 @@
-#ifndef IBEO_COMMON_H
-#define IBEO_COMMON_H
+#ifndef IBEO_SCALA_COMMON_H
+#define IBEO_SCALA_COMMON_H
 
 #include <ibeo_scala_core.h>
 #include <ros/ros.h>

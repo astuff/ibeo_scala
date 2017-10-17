@@ -18,7 +18,7 @@
  *   USA
  */
 
-#include <ibeo_ros_msg_handler.h>
+#include <ibeo_scala_ros_msg_handler.h>
 #include <network_interface/network_interface.h>
 
 //C++ Includes
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
                    camera_image_pub, vehicle_state_2805_pub, vehicle_state_2806_pub,
                    vehicle_state_2807_pub, device_status_pub;
 
-    std::unordered_map<unsigned short, IbeoRosMsgHandler> handler_list;
+    std::unordered_map<unsigned short, IbeoScalaRosMsgHandler> handler_list;
 
     ROS_INFO("Ethernet connection to ScaLA established successfully.");
 
@@ -143,12 +143,12 @@ int main(int argc, char **argv)
       vehicle_state_2806_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
       vehicle_state_2807_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
 
-      IbeoRosMsgHandler handler_2205(0x2205, scan_2205_pub);
-      IbeoRosMsgHandler handler_2225(0x2225, object_2225_pub);
-      IbeoRosMsgHandler handler_2280(0x2280, object_2280_pub);
-      IbeoRosMsgHandler handler_2403(0x2403, camera_image_pub);
-      IbeoRosMsgHandler handler_2806(0x2806, vehicle_state_2806_pub);
-      IbeoRosMsgHandler handler_2807(0x2807, vehicle_state_2807_pub);
+      IbeoScalaRosMsgHandler handler_2205(0x2205, scan_2205_pub);
+      IbeoScalaRosMsgHandler handler_2225(0x2225, object_2225_pub);
+      IbeoScalaRosMsgHandler handler_2280(0x2280, object_2280_pub);
+      IbeoScalaRosMsgHandler handler_2403(0x2403, camera_image_pub);
+      IbeoScalaRosMsgHandler handler_2806(0x2806, vehicle_state_2806_pub);
+      IbeoScalaRosMsgHandler handler_2807(0x2807, vehicle_state_2807_pub);
 
       handler_list.insert(std::make_pair(0x2205, handler_2205));
       handler_list.insert(std::make_pair(0x2225, handler_2225));
@@ -187,11 +187,11 @@ int main(int argc, char **argv)
       object_2271_pub = n.advertise<ibeo_scala_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
       vehicle_state_2805_pub = n.advertise<ibeo_scala_msgs::HostsVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
 
-      IbeoRosMsgHandler handler_2202(0x2202, scan_2202_pub);
-      IbeoRosMsgHandler handler_2208(0x2208, scan_2208_pub);
-      IbeoRosMsgHandler handler_2270(0x2270, object_2270_pub);
-      IbeoRosMsgHandler handler_2271(0x2271, object_2271_pub);
-      IbeoRosMsgHandler handler_2805(0x2805, vehicle_state_2805_pub);
+      IbeoScalaRosMsgHandler handler_2202(0x2202, scan_2202_pub);
+      IbeoScalaRosMsgHandler handler_2208(0x2208, scan_2208_pub);
+      IbeoScalaRosMsgHandler handler_2270(0x2270, object_2270_pub);
+      IbeoScalaRosMsgHandler handler_2271(0x2271, object_2271_pub);
+      IbeoScalaRosMsgHandler handler_2805(0x2805, vehicle_state_2805_pub);
 
       handler_list.insert(std::make_pair(0x2202, handler_2202));
       handler_list.insert(std::make_pair(0x2208, handler_2208));
@@ -201,7 +201,7 @@ int main(int argc, char **argv)
     }
 
     device_status_pub = n.advertise<ibeo_scala_msgs::DeviceStatus>("parsed_tx/device_status", 1);
-    IbeoRosMsgHandler handler_6301(0x6301, device_status_pub);
+    IbeoScalaRosMsgHandler handler_6301(0x6301, device_status_pub);
     handler_list.insert(std::make_pair(0x6301, handler_6301));
 
     ROS_INFO("Setup complete. Starting loop.");

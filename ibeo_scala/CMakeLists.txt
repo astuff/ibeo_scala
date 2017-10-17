@@ -20,14 +20,15 @@ catkin_package(
   ibeo_scala_msgs
 )
 
-include_directories(include/${PROJECT_NAME}
+include_directories(
+  include/${PROJECT_NAME}
   core_ibeo_scala/include
   ${catkin_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}
   src/ibeo_scala.cpp
-  src/ibeo_ros_msg_handler.cpp
+  src/ibeo_scala_ros_msg_handler.cpp
   core_ibeo_scala/src/ibeo_scala_core.cpp
 )
 
