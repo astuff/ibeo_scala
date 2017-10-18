@@ -214,7 +214,7 @@ int main(int argc, char **argv)
 
       while (true)
       {
-        first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size() );
+        first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size(), MAGIC_WORD);
         
         // no magic word found. move along.
         if( first_mw == -1 ) 
