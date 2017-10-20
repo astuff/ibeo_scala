@@ -9,7 +9,7 @@ find_package(catkin REQUIRED
   roscpp
   pcl_ros
   network_interface
-  ibeo_scala_msgs
+  ibeo_msgs
   geometry_msgs
   sensor_msgs
   visualization_msgs
@@ -17,7 +17,7 @@ find_package(catkin REQUIRED
 
 catkin_package(
   CATKIN_DEPENDS
-  ibeo_scala_msgs
+  ibeo_msgs
 )
 
 include_directories(

@@ -15,7 +15,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
   {
     case 0x2202:
     {
-      ibeo_scala_msgs::ScanData2202 new_msg;
+      ibeo_msgs::ScanData2202 new_msg;
       encode_2202((ScanData2202*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -24,7 +24,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2205:
     {
-      ibeo_scala_msgs::ScanData2205 new_msg;
+      ibeo_msgs::ScanData2205 new_msg;
       encode_2205((ScanData2205*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -33,7 +33,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2208:
     {
-      ibeo_scala_msgs::ScanData2208 new_msg;
+      ibeo_msgs::ScanData2208 new_msg;
       encode_2208((ScanData2208*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -42,7 +42,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2225:
     {
-      ibeo_scala_msgs::ObjectData2225 new_msg;
+      ibeo_msgs::ObjectData2225 new_msg;
       encode_2225((ObjectData2225*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -51,7 +51,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2270:
     {
-      ibeo_scala_msgs::ObjectData2270 new_msg;
+      ibeo_msgs::ObjectData2270 new_msg;
       encode_2270((ObjectData2270*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -60,7 +60,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2271:
     {
-      ibeo_scala_msgs::ObjectData2271 new_msg;
+      ibeo_msgs::ObjectData2271 new_msg;
       encode_2271((ObjectData2271*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -69,7 +69,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2280:
     {
-      ibeo_scala_msgs::ObjectData2280 new_msg;
+      ibeo_msgs::ObjectData2280 new_msg;
       encode_2280((ObjectData2280*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -78,7 +78,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2403:
     {
-      ibeo_scala_msgs::CameraImage new_msg;
+      ibeo_msgs::CameraImage new_msg;
       encode_2403((CameraImage*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -87,7 +87,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2805:
     {
-      ibeo_scala_msgs::HostVehicleState2805 new_msg;
+      ibeo_msgs::HostVehicleState2805 new_msg;
       encode_2805((HostVehicleState2805*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -96,7 +96,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2806:
     {
-      ibeo_scala_msgs::HostVehicleState2806 new_msg;
+      ibeo_msgs::HostVehicleState2806 new_msg;
       encode_2806((HostVehicleState2806*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -105,7 +105,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x2807:
     {
-      ibeo_scala_msgs::HostVehicleState2807 new_msg;
+      ibeo_msgs::HostVehicleState2807 new_msg;
       encode_2807((HostVehicleState2807*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -114,7 +114,7 @@ void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std
     } break;
     case 0x6301:
     {
-      ibeo_scala_msgs::DeviceStatus new_msg;
+      ibeo_msgs::DeviceStatus new_msg;
       encode_6301((DeviceStatus*)parser_class, new_msg);
       new_msg.header.frame_id = frame_id;
       new_msg.header.stamp = ros::Time::now();
@@ -134,7 +134,7 @@ ros::Time IbeoScalaRosMsgHandler::ntp_to_ros_time(NTPTime time)
     return ros::Time(((time & 0xFFFF0000) >> 32), (time & 0x0000FFFF));
 }
 
-void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ibeo_scala_msgs::IbeoDataHeader &msg_header)
+void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ibeo_msgs::IbeoDataHeader &msg_header)
 {
   msg_header.previous_message_size = class_header.previous_message_size;
   msg_header.message_size = class_header.message_size;
@@ -143,7 +143,7 @@ void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ib
   msg_header.stamp = ntp_to_ros_time(class_header.time);
 }
 
-void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_scala_msgs::ScanData2202 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_msgs::ScanData2202 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -164,7 +164,7 @@ void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_scala_
 
   for (auto scan_point : parser_class->scan_point_list)
   {
-    ibeo_scala_msgs::ScanPoint2202 scan_point_msg;
+    ibeo_msgs::ScanPoint2202 scan_point_msg;
 
     scan_point_msg.layer = scan_point.layer;
     scan_point_msg.echo = scan_point.echo;
@@ -180,7 +180,7 @@ void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_scala_
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_msgs::ScanData2205 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_msgs::ScanData2205 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -189,14 +189,14 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_
   new_msg.fused_scan = parser_class->fused_scan;
 
   if (parser_class->mirror_side == FRONT)
-    new_msg.mirror_side = ibeo_scala_msgs::ScanData2205::FRONT;
+    new_msg.mirror_side = ibeo_msgs::ScanData2205::FRONT;
   else
-    new_msg.mirror_side = ibeo_scala_msgs::ScanData2205::REAR;
+    new_msg.mirror_side = ibeo_msgs::ScanData2205::REAR;
 
   if (parser_class->coordinate_system == SCANNER)
-    new_msg.coordinate_system = ibeo_scala_msgs::ScanData2205::SCANNER;
+    new_msg.coordinate_system = ibeo_msgs::ScanData2205::SCANNER;
   else
-    new_msg.coordinate_system = ibeo_scala_msgs::ScanData2205::VEHICLE;
+    new_msg.coordinate_system = ibeo_msgs::ScanData2205::VEHICLE;
 
   new_msg.scan_number = parser_class->scan_number;
   new_msg.scan_points = parser_class->scan_points;
@@ -204,7 +204,7 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_
 
   for (auto scanner_info : parser_class->scanner_info_list)
   {
-    ibeo_scala_msgs::ScannerInfo scanner_info_msg;
+    ibeo_msgs::ScannerInfo scanner_info_msg;
 
     scanner_info_msg.device_id = scanner_info.device_id;
     scanner_info_msg.scanner_type = scanner_info.scanner_type;
@@ -237,7 +237,7 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_
 
   for (auto scan_point : parser_class->scan_point_list)
   {
-    ibeo_scala_msgs::ScanPoint2205 scan_point_msg;
+    ibeo_msgs::ScanPoint2205 scan_point_msg;
 
     scan_point_msg.x_position = scan_point.x_position;
     scan_point_msg.y_position = scan_point.y_position;
@@ -256,20 +256,20 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_scala_
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_scala_msgs::ScanData2208 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_msgs::ScanData2208 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
   new_msg.scan_number = parser_class->scan_number;
-  new_msg.scanner_type = (parser_class->scanner_type == ibeo_scala_msgs::ScanData2208::SCALA_B2) ? ibeo_scala_msgs::ScanData2208::SCALA_B2 : 0;
+  new_msg.scanner_type = (parser_class->scanner_type == ibeo_msgs::ScanData2208::SCALA_B2) ? ibeo_msgs::ScanData2208::SCALA_B2 : 0;
   new_msg.motor_on = parser_class->motor_on;
   new_msg.laser_on = parser_class->laser_on;
   new_msg.frequency_locked = parser_class->frequency_locked;
   
   if (parser_class->motor_rotating_direction == CLOCKWISE)
-    new_msg.motor_rotating_direction = ibeo_scala_msgs::ScanData2208::CLOCKWISE;
+    new_msg.motor_rotating_direction = ibeo_msgs::ScanData2208::CLOCKWISE;
   else if (parser_class->motor_rotating_direction == COUNTER_CLOCKWISE)
-    new_msg.motor_rotating_direction = ibeo_scala_msgs::ScanData2208::COUNTER_CLOCKWISE;
+    new_msg.motor_rotating_direction = ibeo_msgs::ScanData2208::COUNTER_CLOCKWISE;
 
   new_msg.angle_ticks_per_rotation = parser_class->angle_ticks_per_rotation;
   new_msg.scan_flags = parser_class->scan_flags;
@@ -286,15 +286,15 @@ void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_scala_
   new_msg.end_angle_ticks = parser_class->end_angle_ticks;
 
   if (parser_class->mirror_side == FRONT)
-    new_msg.mirror_side = ibeo_scala_msgs::ScanData2208::FRONT_MIRROR;
+    new_msg.mirror_side = ibeo_msgs::ScanData2208::FRONT_MIRROR;
   else if (parser_class->mirror_side == REAR)
-    new_msg.mirror_side = ibeo_scala_msgs::ScanData2208::REAR_MIRROR;
+    new_msg.mirror_side = ibeo_msgs::ScanData2208::REAR_MIRROR;
 
   new_msg.mirror_tilt = parser_class->mirror_tilt;
 
   for (auto scan_point : parser_class->scan_point_list)
   {
-    ibeo_scala_msgs::ScanPoint2208 scan_point_msg;
+    ibeo_msgs::ScanPoint2208 scan_point_msg;
 
     scan_point_msg.echo = scan_point.echo;
     scan_point_msg.layer = scan_point.layer;
@@ -310,7 +310,7 @@ void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_scala_
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scala_msgs::ObjectData2225 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_msgs::ObjectData2225 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -319,7 +319,7 @@ void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scal
 
   for (auto object : parser_class->object_list)
   {
-    ibeo_scala_msgs::Object2225 object_msg;
+    ibeo_msgs::Object2225 object_msg;
 
     object_msg.id = object.id;
     object_msg.age = object.age;
@@ -329,28 +329,28 @@ void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scal
     switch (object.classification)
     {
       case UNCLASSIFIED:
-        object_msg.classification = ibeo_scala_msgs::Object2225::UNCLASSIFIED;
+        object_msg.classification = ibeo_msgs::Object2225::UNCLASSIFIED;
         break;
       case UNKNOWN_SMALL:
-        object_msg.classification = ibeo_scala_msgs::Object2225::UNKNOWN_SMALL;
+        object_msg.classification = ibeo_msgs::Object2225::UNKNOWN_SMALL;
         break;
       case UNKNOWN_BIG:
-        object_msg.classification = ibeo_scala_msgs::Object2225::UNKNOWN_BIG;
+        object_msg.classification = ibeo_msgs::Object2225::UNKNOWN_BIG;
         break;
       case PEDESTRIAN:
-        object_msg.classification = ibeo_scala_msgs::Object2225::PEDESTRIAN;
+        object_msg.classification = ibeo_msgs::Object2225::PEDESTRIAN;
         break;
       case BIKE:
-        object_msg.classification = ibeo_scala_msgs::Object2225::BIKE;
+        object_msg.classification = ibeo_msgs::Object2225::BIKE;
         break;
       case CAR:
-        object_msg.classification = ibeo_scala_msgs::Object2225::CAR;
+        object_msg.classification = ibeo_msgs::Object2225::CAR;
         break;
       case TRUCK:
-        object_msg.classification = ibeo_scala_msgs::Object2225::TRUCK;
+        object_msg.classification = ibeo_msgs::Object2225::TRUCK;
         break;
       default:
-        object_msg.classification = ibeo_scala_msgs::Object2225::UNCLASSIFIED;
+        object_msg.classification = ibeo_msgs::Object2225::UNCLASSIFIED;
         break;
     }
 
@@ -380,7 +380,7 @@ void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scal
     
     for (auto contour_point : object.contour_point_list)
     {
-      ibeo_scala_msgs::Point2DFloat contour_point_msg;
+      ibeo_msgs::Point2DFloat contour_point_msg;
 
       contour_point_msg.x = contour_point.x;
       contour_point_msg.y = contour_point.y;
@@ -392,7 +392,7 @@ void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_scal
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scala_msgs::ObjectData2270 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_msgs::ObjectData2270 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -402,7 +402,7 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scal
 
   for (auto object : parser_class->object_list)
   {
-    ibeo_scala_msgs::Object2270 object_msg;
+    ibeo_msgs::Object2270 object_msg;
 
     object_msg.id = object.id;
     object_msg.age = object.age;
@@ -412,40 +412,40 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scal
     switch (object.reference_point_location)
     {
       case COG:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_GRAVITY;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::CENTER_OF_GRAVITY;
         break;
       case TOP_FRONT_LEFT_CORNER:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::TOP_FRONT_LEFT_CORNER;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::TOP_FRONT_LEFT_CORNER;
         break;
       case TOP_FRONT_RIGHT_CORNER:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::TOP_FRONT_RIGHT_CORNER;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::TOP_FRONT_RIGHT_CORNER;
         break;
       case BOTTOM_REAR_RIGHT_CORNER:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOTTOM_REAR_RIGHT_CORNER;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::BOTTOM_REAR_RIGHT_CORNER;
         break;
       case BOTTOM_REAR_LEFT_CORNER:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOTTOM_REAR_LEFT_CORNER;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::BOTTOM_REAR_LEFT_CORNER;
         break;
       case CENTER_OF_TOP_FRONT_EDGE:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_TOP_FRONT_EDGE;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::CENTER_OF_TOP_FRONT_EDGE;
         break;
       case CENTER_OF_RIGHT_EDGE:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_RIGHT_EDGE;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::CENTER_OF_RIGHT_EDGE;
         break;
       case CENTER_OF_BOTTOM_REAR_EDGE:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_BOTTOM_REAR_EDGE;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::CENTER_OF_BOTTOM_REAR_EDGE;
         break;
       case CENTER_OF_LEFT_EDGE:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::CENTER_OF_LEFT_EDGE;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::CENTER_OF_LEFT_EDGE;
         break;
       case BOX_CENTER:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::BOX_CENTER;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::BOX_CENTER;
         break;
       case INVALID:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::INVALID;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::INVALID;
         break;
       default:
-        object_msg.reference_point_location = ibeo_scala_msgs::Object2270::INVALID;
+        object_msg.reference_point_location = ibeo_msgs::Object2270::INVALID;
         break;
     }
 
@@ -471,41 +471,41 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scal
     switch (object.classification)
     {
       case UNCLASSIFIED:
-        object_msg.classification = ibeo_scala_msgs::Object2270::UNCLASSIFIED;
+        object_msg.classification = ibeo_msgs::Object2270::UNCLASSIFIED;
         break;
       case UNKNOWN_SMALL:
-        object_msg.classification = ibeo_scala_msgs::Object2270::UNKNOWN_SMALL;
+        object_msg.classification = ibeo_msgs::Object2270::UNKNOWN_SMALL;
         break;
       case UNKNOWN_BIG:
-        object_msg.classification = ibeo_scala_msgs::Object2270::UNKNOWN_BIG;
+        object_msg.classification = ibeo_msgs::Object2270::UNKNOWN_BIG;
         break;
       case PEDESTRIAN:
-        object_msg.classification = ibeo_scala_msgs::Object2270::PEDESTRIAN;
+        object_msg.classification = ibeo_msgs::Object2270::PEDESTRIAN;
         break;
       case BIKE:
-        object_msg.classification = ibeo_scala_msgs::Object2270::BIKE;
+        object_msg.classification = ibeo_msgs::Object2270::BIKE;
         break;
       case CAR:
-        object_msg.classification = ibeo_scala_msgs::Object2270::CAR;
+        object_msg.classification = ibeo_msgs::Object2270::CAR;
         break;
       case TRUCK:
-        object_msg.classification = ibeo_scala_msgs::Object2270::TRUCK;
+        object_msg.classification = ibeo_msgs::Object2270::TRUCK;
         break;
       default:
-        object_msg.classification = ibeo_scala_msgs::Object2270::UNCLASSIFIED;
+        object_msg.classification = ibeo_msgs::Object2270::UNCLASSIFIED;
         break;
     }
 
     switch (object.tracking_model)
     {
       case STATIC:
-        object_msg.tracking_model = ibeo_scala_msgs::Object2270::STATIC_MODEL;
+        object_msg.tracking_model = ibeo_msgs::Object2270::STATIC_MODEL;
         break;
       case DYNAMIC:
-        object_msg.tracking_model = ibeo_scala_msgs::Object2270::DYNAMIC_MODEL;
+        object_msg.tracking_model = ibeo_msgs::Object2270::DYNAMIC_MODEL;
         break;
       default:
-        object_msg.tracking_model = ibeo_scala_msgs::Object2270::DYNAMIC_MODEL;
+        object_msg.tracking_model = ibeo_msgs::Object2270::DYNAMIC_MODEL;
         break;
     }
 
@@ -517,7 +517,7 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scal
 
     for (auto contour_point : object.contour_point_list)
     {
-      ibeo_scala_msgs::Point2Di contour_point_msg;
+      ibeo_msgs::Point2Di contour_point_msg;
 
       contour_point_msg.x = contour_point.x;
       contour_point_msg.y = contour_point.y;
@@ -528,7 +528,7 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_scal
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scala_msgs::ObjectData2271 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_msgs::ObjectData2271 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -538,7 +538,7 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
 
   for (auto object : parser_class->object_list)
   {
-    ibeo_scala_msgs::Object2271 object_msg;
+    ibeo_msgs::Object2271 object_msg;
 
     object_msg.untracked_properties_available = object.untracked_properties_available;
     object_msg.tracked_properties_available = object.tracked_properties_available;
@@ -560,7 +560,7 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
 
     for (auto contour_point : object.untracked_properties.contour_point_list)
     {
-      ibeo_scala_msgs::ContourPointSigma contour_point_msg;
+      ibeo_msgs::ContourPointSigma contour_point_msg;
 
       contour_point_msg.x = contour_point.x;
       contour_point_msg.y = contour_point.y;
@@ -575,23 +575,23 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
     switch (object.tracked_properties.object_phase)
     {
       case INITIALIZATION:
-        object_msg.tracked_properties.object_phase = ibeo_scala_msgs::TrackedProperties::INITIALIZATION_PHASE;
+        object_msg.tracked_properties.object_phase = ibeo_msgs::TrackedProperties::INITIALIZATION_PHASE;
         break;
       case TRACKING:
-        object_msg.tracked_properties.object_phase = ibeo_scala_msgs::TrackedProperties::TRACKING_PHASE;
+        object_msg.tracked_properties.object_phase = ibeo_msgs::TrackedProperties::TRACKING_PHASE;
         break;
     }
 
     switch (object.tracked_properties.dynamic_property)
     {
       case DYNAMIC_AND_MOVING:
-        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::DYNAMIC_AND_MOVING;
+        object_msg.tracked_properties.dynamic_property = ibeo_msgs::TrackedProperties::DYNAMIC_AND_MOVING;
         break;
       case DYNAMIC_AND_STOPPED:
-        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::DYNAMIC_AND_STOPPED;
+        object_msg.tracked_properties.dynamic_property = ibeo_msgs::TrackedProperties::DYNAMIC_AND_STOPPED;
         break;
       case A_PRIORI_STATIONARY:
-        object_msg.tracked_properties.dynamic_property = ibeo_scala_msgs::TrackedProperties::A_PRIORI_STATIONARY;
+        object_msg.tracked_properties.dynamic_property = ibeo_msgs::TrackedProperties::A_PRIORI_STATIONARY;
         break;
     }
 
@@ -606,28 +606,28 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
     switch (object.tracked_properties.classification)
     {
       case UNCLASSIFIED:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNCLASSIFIED;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::UNCLASSIFIED;
         break;
       case UNKNOWN_SMALL:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNKNOWN_SMALL;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::UNKNOWN_SMALL;
         break;
       case UNKNOWN_BIG:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNKNOWN_BIG;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::UNKNOWN_BIG;
         break;
       case PEDESTRIAN:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::PEDESTRIAN;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::PEDESTRIAN;
         break;
       case BIKE:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::BIKE;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::BIKE;
         break;
       case CAR:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::CAR;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::CAR;
         break;
       case TRUCK:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::TRUCK;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::TRUCK;
         break;
       default:
-        object_msg.tracked_properties.classification = ibeo_scala_msgs::TrackedProperties::UNCLASSIFIED;
+        object_msg.tracked_properties.classification = ibeo_msgs::TrackedProperties::UNCLASSIFIED;
         break;
     }
 
@@ -642,40 +642,40 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
     switch (object.tracked_properties.tracking_point_location)
     {
       case COG:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_GRAVITY;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::CENTER_OF_GRAVITY;
         break;
       case TOP_FRONT_LEFT_CORNER:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::TOP_FRONT_LEFT_CORNER;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::TOP_FRONT_LEFT_CORNER;
         break;
       case TOP_FRONT_RIGHT_CORNER:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::TOP_FRONT_RIGHT_CORNER;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::TOP_FRONT_RIGHT_CORNER;
         break;
       case BOTTOM_REAR_RIGHT_CORNER:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOTTOM_REAR_RIGHT_CORNER;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::BOTTOM_REAR_RIGHT_CORNER;
         break;
       case BOTTOM_REAR_LEFT_CORNER:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOTTOM_REAR_LEFT_CORNER;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::BOTTOM_REAR_LEFT_CORNER;
         break;
       case CENTER_OF_TOP_FRONT_EDGE:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_TOP_FRONT_EDGE;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::CENTER_OF_TOP_FRONT_EDGE;
         break;
       case CENTER_OF_RIGHT_EDGE:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_RIGHT_EDGE;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::CENTER_OF_RIGHT_EDGE;
         break;
       case CENTER_OF_BOTTOM_REAR_EDGE:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_BOTTOM_REAR_EDGE;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::CENTER_OF_BOTTOM_REAR_EDGE;
         break;
       case CENTER_OF_LEFT_EDGE:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::CENTER_OF_LEFT_EDGE;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::CENTER_OF_LEFT_EDGE;
         break;
       case BOX_CENTER:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::BOX_CENTER;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::BOX_CENTER;
         break;
       case INVALID:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::INVALID;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::INVALID;
         break;
       default:
-        object_msg.tracked_properties.tracking_point_location = ibeo_scala_msgs::TrackedProperties::INVALID;
+        object_msg.tracked_properties.tracking_point_location = ibeo_msgs::TrackedProperties::INVALID;
         break;
     }
 
@@ -697,7 +697,7 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
 
     for (auto contour_point : object.tracked_properties.contour_point_list)
     {
-      ibeo_scala_msgs::ContourPointSigma contour_point_msg;
+      ibeo_msgs::ContourPointSigma contour_point_msg;
 
       contour_point_msg.x = contour_point.x;
       contour_point_msg.y = contour_point.y;
@@ -710,14 +710,14 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_scal
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scala_msgs::ObjectData2280 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_msgs::ObjectData2280 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
   new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
 
   for (auto object : parser_class->object_list)
   {
-    ibeo_scala_msgs::Object2280 object_msg;
+    ibeo_msgs::Object2280 object_msg;
 
     object_msg.object_id = object.id;
 
@@ -845,7 +845,7 @@ void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scal
     int i = 0;
     for (auto contour_point : object.contour_point_list)
     {
-      ibeo_scala_msgs::Point2DFloat msg_cp;
+      ibeo_msgs::Point2DFloat msg_cp;
       msg_cp.x = contour_point.x;
       msg_cp.y = contour_point.y;
 
@@ -858,7 +858,7 @@ void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_scal
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_msgs::CameraImage &new_msg)
+void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_msgs::CameraImage &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -906,7 +906,7 @@ void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_scala_m
   
 }
 
-void IbeoScalaRosMsgHandler::encode_2805(HostVehicleState2805* parser_class, ibeo_scala_msgs::HostVehicleState2805 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2805(HostVehicleState2805* parser_class, ibeo_msgs::HostVehicleState2805 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -927,7 +927,7 @@ void IbeoScalaRosMsgHandler::encode_2805(HostVehicleState2805* parser_class, ibe
 
 }
 
-void IbeoScalaRosMsgHandler::encode_2806(HostVehicleState2806* parser_class, ibeo_scala_msgs::HostVehicleState2806 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2806(HostVehicleState2806* parser_class, ibeo_msgs::HostVehicleState2806 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -952,7 +952,7 @@ void IbeoScalaRosMsgHandler::encode_2806(HostVehicleState2806* parser_class, ibe
 
 }
 
-void IbeoScalaRosMsgHandler::encode_2807(HostVehicleState2807* parser_class, ibeo_scala_msgs::HostVehicleState2807 &new_msg)
+void IbeoScalaRosMsgHandler::encode_2807(HostVehicleState2807* parser_class, ibeo_msgs::HostVehicleState2807 &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 
@@ -978,7 +978,7 @@ void IbeoScalaRosMsgHandler::encode_2807(HostVehicleState2807* parser_class, ibe
 
 }
 
-void IbeoScalaRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_scala_msgs::DeviceStatus &new_msg)
+void IbeoScalaRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_msgs::DeviceStatus &new_msg)
 {
   encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
 

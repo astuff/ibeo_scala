@@ -134,12 +134,12 @@ int main(int argc, char **argv)
         if( write_status != OK ) ROS_ERROR("Ibeo ScaLa - Command send failure");
       }
 
-      scan_2205_pub = n.advertise<ibeo_scala_msgs::ScanData2205>("parsed_tx/scan_data_2205", 1);
-      object_2225_pub = n.advertise<ibeo_scala_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
-      object_2280_pub = n.advertise<ibeo_scala_msgs::ObjectData2280>("parsed_tx/object_data_2280", 1);
-      camera_image_pub = n.advertise<ibeo_scala_msgs::CameraImage>("parsed_tx/camera_image", 1);
-      vehicle_state_2806_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
-      vehicle_state_2807_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
+      scan_2205_pub = n.advertise<ibeo_msgs::ScanData2205>("parsed_tx/scan_data_2205", 1);
+      object_2225_pub = n.advertise<ibeo_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
+      object_2280_pub = n.advertise<ibeo_msgs::ObjectData2280>("parsed_tx/object_data_2280", 1);
+      camera_image_pub = n.advertise<ibeo_msgs::CameraImage>("parsed_tx/camera_image", 1);
+      vehicle_state_2806_pub = n.advertise<ibeo_msgs::HostVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
+      vehicle_state_2807_pub = n.advertise<ibeo_msgs::HostVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
 
       IbeoScalaRosMsgHandler handler_2205(ScanData2205::DATA_TYPE, scan_2205_pub);
       IbeoScalaRosMsgHandler handler_2225(ObjectData2225::DATA_TYPE, object_2225_pub);
@@ -171,11 +171,11 @@ int main(int argc, char **argv)
     }
     else
     {
-      scan_2202_pub = n.advertise<ibeo_scala_msgs::ScanData2202>("parsed_tx/scan_data_2202", 1);
-      scan_2208_pub = n.advertise<ibeo_scala_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
-      object_2270_pub = n.advertise<ibeo_scala_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
-      object_2271_pub = n.advertise<ibeo_scala_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
-      vehicle_state_2805_pub = n.advertise<ibeo_scala_msgs::HostVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
+      scan_2202_pub = n.advertise<ibeo_msgs::ScanData2202>("parsed_tx/scan_data_2202", 1);
+      scan_2208_pub = n.advertise<ibeo_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
+      object_2270_pub = n.advertise<ibeo_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
+      object_2271_pub = n.advertise<ibeo_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
+      vehicle_state_2805_pub = n.advertise<ibeo_msgs::HostVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
 
       IbeoScalaRosMsgHandler handler_2202(ScanData2202::DATA_TYPE, scan_2202_pub);
       IbeoScalaRosMsgHandler handler_2208(ScanData2208::DATA_TYPE, scan_2208_pub);
@@ -190,7 +190,7 @@ int main(int argc, char **argv)
       handler_list.insert(std::make_pair(HostVehicleState2805::DATA_TYPE, handler_2805));
     }
 
-    device_status_pub = n.advertise<ibeo_scala_msgs::DeviceStatus>("parsed_tx/device_status", 1);
+    device_status_pub = n.advertise<ibeo_msgs::DeviceStatus>("parsed_tx/device_status", 1);
 
     IbeoScalaRosMsgHandler handler_6301(DeviceStatus::DATA_TYPE, device_status_pub);
     handler_list.insert(std::make_pair(DeviceStatus::DATA_TYPE, handler_6301));
