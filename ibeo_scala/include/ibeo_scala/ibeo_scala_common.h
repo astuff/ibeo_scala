@@ -21,7 +21,7 @@
 #include <ibeo_msgs/HostVehicleState2806.h>
 #include <ibeo_msgs/HostVehicleState2807.h>
 #include <ibeo_msgs/DeviceStatus.h>
-#include <ibeo_msgs/Point2DFloat.h>
+#include <ibeo_msgs/Point2Df.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/PointCloud.h>

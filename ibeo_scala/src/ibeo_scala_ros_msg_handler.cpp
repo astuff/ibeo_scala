@@ -354,7 +354,7 @@ void IbeoScalaRosMsgHandler::fill2225(std::shared_ptr<IbeoTxMessage>& parser_cla
     
     for (auto contour_point : object.contour_point_list)
     {
-      ibeo_msgs::Point2DFloat contour_point_msg;
+      ibeo_msgs::Point2Df contour_point_msg;
 
       contour_point_msg.x = contour_point.x;
       contour_point_msg.y = contour_point.y;
@@ -834,7 +834,7 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
     int i = 0;
     for (auto contour_point : object.contour_point_list)
     {
-      ibeo_msgs::Point2DFloat msg_cp;
+      ibeo_msgs::Point2Df msg_cp;
       msg_cp.x = contour_point.x;
       msg_cp.y = contour_point.y;
 
