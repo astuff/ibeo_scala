@@ -2,139 +2,95 @@
 
 using namespace AS::Drivers::IbeoScala;
 
-IbeoScalaRosMsgHandler::IbeoScalaRosMsgHandler(unsigned short type_id, ros::Publisher &pub) :
-  type_id(type_id),
-  pub(pub)
+IbeoScalaRosMsgHandler::IbeoScalaRosMsgHandler(ros::Publisher &pub, std::string frame_id) :
+  pub(pub),
+  frame_id(frame_id)
 {
 }
 
-void IbeoScalaRosMsgHandler::encode_and_publish(IbeoTxMessage* parser_class, std::string frame_id)
+void IbeoScalaRosMsgHandler::fillAndPublish(unsigned short type_id,
+                                            std::shared_ptr<IbeoTxMessage>& parser_class)
 {
-  //printf("encode and publish: 0x%01x\n",type_id);
-  switch (type_id)
+  if (type_id == ScanData2202::DATA_TYPE)
   {
-    case 0x2202:
-    {
-      ibeo_msgs::ScanData2202 new_msg;
-      encode_2202((ScanData2202*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing scan data\n");
-    } break;
-    case 0x2205:
-    {
-      ibeo_msgs::ScanData2205 new_msg;
-      encode_2205((ScanData2205*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing scan data\n");
-    } break;
-    case 0x2208:
-    {
-      ibeo_msgs::ScanData2208 new_msg;
-      encode_2208((ScanData2208*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing scan data\n");
-    } break;
-    case 0x2225:
-    {
-      ibeo_msgs::ObjectData2225 new_msg;
-      encode_2225((ObjectData2225*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing object data\n");
-    } break;
-    case 0x2270:
-    {
-      ibeo_msgs::ObjectData2270 new_msg;
-      encode_2270((ObjectData2270*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing object data\n");
-    } break;
-    case 0x2271:
-    {
-      ibeo_msgs::ObjectData2271 new_msg;
-      encode_2271((ObjectData2271*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing object data\n");
-    } break;
-    case 0x2280:
-    {
-      ibeo_msgs::ObjectData2280 new_msg;
-      encode_2280((ObjectData2280*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing object data\n");
-    } break;
-    case 0x2403:
-    {
-      ibeo_msgs::CameraImage new_msg;
-      encode_2403((CameraImage*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing camera image\n");
-    } break;
-    case 0x2805:
-    {
-      ibeo_msgs::HostVehicleState2805 new_msg;
-      encode_2805((HostVehicleState2805*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing host vehicle state\n");
-    } break;
-    case 0x2806:
-    {
-      ibeo_msgs::HostVehicleState2806 new_msg;
-      encode_2806((HostVehicleState2806*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing host vehicle state\n");
-    } break;
-    case 0x2807:
-    {
-      ibeo_msgs::HostVehicleState2807 new_msg;
-      encode_2807((HostVehicleState2807*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing host vehicle state\n");
-    } break;
-    case 0x6301:
-    {
-      ibeo_msgs::DeviceStatus new_msg;
-      encode_6301((DeviceStatus*)parser_class, new_msg);
-      new_msg.header.frame_id = frame_id;
-      new_msg.header.stamp = ros::Time::now();
-      pub.publish(new_msg);
-      //printf("publishing device status\n");
-
-    } break;
-    default:
-    {
-      //printf("nonsense message type.\n");
-    }
+    ibeo_msgs::ScanData2202 new_msg;
+    fill2202(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ScanData2205::DATA_TYPE)
+  {
+    ibeo_msgs::ScanData2205 new_msg;
+    fill2205(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ScanData2208::DATA_TYPE)
+  {
+    ibeo_msgs::ScanData2208 new_msg;
+    fill2208(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ObjectData2225::DATA_TYPE)
+  {
+    ibeo_msgs::ObjectData2225 new_msg;
+    fill2225(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ObjectData2270::DATA_TYPE)
+  {
+    ibeo_msgs::ObjectData2270 new_msg;
+    fill2270(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ObjectData2271::DATA_TYPE)
+  {
+    ibeo_msgs::ObjectData2271 new_msg;
+    fill2271(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == ObjectData2280::DATA_TYPE)
+  {
+    ibeo_msgs::ObjectData2280 new_msg;
+    fill2280(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == CameraImage::DATA_TYPE)
+  {
+    ibeo_msgs::CameraImage new_msg;
+    fill2403(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == HostVehicleState2805::DATA_TYPE)
+  {
+    ibeo_msgs::HostVehicleState2805 new_msg;
+    fill2805(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == HostVehicleState2806::DATA_TYPE)
+  {
+    ibeo_msgs::HostVehicleState2806 new_msg;
+    fill2806(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == HostVehicleState2807::DATA_TYPE)
+  {
+    ibeo_msgs::HostVehicleState2807 new_msg;
+    fill2807(parser_class, new_msg);
+    pub.publish(new_msg);
+  }
+  else if (type_id == DeviceStatus::DATA_TYPE)
+  {
+    ibeo_msgs::DeviceStatus new_msg;
+    fill6301(parser_class, new_msg);
+    pub.publish(new_msg);
   }
 }
 
 ros::Time IbeoScalaRosMsgHandler::ntp_to_ros_time(NTPTime time)
 {
-    return ros::Time(((time & 0xFFFF0000) >> 32), (time & 0x0000FFFF));
+  return ros::Time(((time & 0xFFFF0000) >> 32), (time & 0x0000FFFF));
 }
 
-void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ibeo_msgs::IbeoDataHeader &msg_header)
+void IbeoScalaRosMsgHandler::fillIbeoHeader(IbeoDataHeader& class_header, ibeo_msgs::IbeoDataHeader& msg_header)
 {
   msg_header.previous_message_size = class_header.previous_message_size;
   msg_header.message_size = class_header.message_size;
@@ -143,26 +99,28 @@ void IbeoScalaRosMsgHandler::encode_ibeo_header(IbeoDataHeader &class_header, ib
   msg_header.stamp = ntp_to_ros_time(class_header.time);
 }
 
-void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_msgs::ScanData2202 &new_msg)
+void IbeoScalaRosMsgHandler::fill2202(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ScanData2202& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ScanData2202>(parser_class);
 
-  new_msg.scan_number = parser_class->scan_number;
-  new_msg.scanner_status = parser_class->scanner_status;
-  new_msg.sync_phase_offset = parser_class->sync_phase_offset;
-  new_msg.scan_start_time = ntp_to_ros_time(parser_class->scan_start_time);
-  new_msg.scan_end_time = ntp_to_ros_time(parser_class->scan_end_time);
-  new_msg.angle_ticks_per_rotation = parser_class->angle_ticks_per_rotation;
-  new_msg.start_angle_ticks = parser_class->start_angle_ticks;
-  new_msg.end_angle_ticks = parser_class->end_angle_ticks;
-  new_msg.mounting_yaw_angle_ticks = parser_class->mounting_yaw_angle_ticks;
-  new_msg.mounting_pitch_angle_ticks = parser_class->mounting_pitch_angle_ticks;
-  new_msg.mounting_roll_angle_ticks = parser_class->mounting_roll_angle_ticks;
-  new_msg.mounting_position_x = parser_class->mounting_position_x;
-  new_msg.mounting_position_y = parser_class->mounting_position_y;
-  new_msg.mounting_position_z = parser_class->mounting_position_z;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  for (auto scan_point : parser_class->scan_point_list)
+  new_msg.scan_number = dc_parser->scan_number;
+  new_msg.scanner_status = dc_parser->scanner_status;
+  new_msg.sync_phase_offset = dc_parser->sync_phase_offset;
+  new_msg.scan_start_time = ntp_to_ros_time(dc_parser->scan_start_time);
+  new_msg.scan_end_time = ntp_to_ros_time(dc_parser->scan_end_time);
+  new_msg.angle_ticks_per_rotation = dc_parser->angle_ticks_per_rotation;
+  new_msg.start_angle_ticks = dc_parser->start_angle_ticks;
+  new_msg.end_angle_ticks = dc_parser->end_angle_ticks;
+  new_msg.mounting_yaw_angle_ticks = dc_parser->mounting_yaw_angle_ticks;
+  new_msg.mounting_pitch_angle_ticks = dc_parser->mounting_pitch_angle_ticks;
+  new_msg.mounting_roll_angle_ticks = dc_parser->mounting_roll_angle_ticks;
+  new_msg.mounting_position_x = dc_parser->mounting_position_x;
+  new_msg.mounting_position_y = dc_parser->mounting_position_y;
+  new_msg.mounting_position_z = dc_parser->mounting_position_z;
+
+  for (auto scan_point : dc_parser->scan_point_list)
   {
     ibeo_msgs::ScanPoint2202 scan_point_msg;
 
@@ -178,31 +136,36 @@ void IbeoScalaRosMsgHandler::encode_2202(ScanData2202* parser_class, ibeo_msgs::
 
     new_msg.scan_point_list.push_back(scan_point_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_msgs::ScanData2205 &new_msg)
+void IbeoScalaRosMsgHandler::fill2205(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ScanData2205& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ScanData2205>(parser_class);
 
-  new_msg.scan_start_time = ntp_to_ros_time(parser_class->scan_start_time);
-  new_msg.scan_end_time_offset = parser_class->scan_end_time_offset;
-  new_msg.fused_scan = parser_class->fused_scan;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  if (parser_class->mirror_side == FRONT)
+  new_msg.scan_start_time = ntp_to_ros_time(dc_parser->scan_start_time);
+  new_msg.scan_end_time_offset = dc_parser->scan_end_time_offset;
+  new_msg.fused_scan = dc_parser->fused_scan;
+
+  if (dc_parser->mirror_side == FRONT)
     new_msg.mirror_side = ibeo_msgs::ScanData2205::FRONT;
   else
     new_msg.mirror_side = ibeo_msgs::ScanData2205::REAR;
 
-  if (parser_class->coordinate_system == SCANNER)
+  if (dc_parser->coordinate_system == SCANNER)
     new_msg.coordinate_system = ibeo_msgs::ScanData2205::SCANNER;
   else
     new_msg.coordinate_system = ibeo_msgs::ScanData2205::VEHICLE;
 
-  new_msg.scan_number = parser_class->scan_number;
-  new_msg.scan_points = parser_class->scan_points;
-  new_msg.number_of_scanner_infos = parser_class->number_of_scanner_infos;
+  new_msg.scan_number = dc_parser->scan_number;
+  new_msg.scan_points = dc_parser->scan_points;
+  new_msg.number_of_scanner_infos = dc_parser->number_of_scanner_infos;
 
-  for (auto scanner_info : parser_class->scanner_info_list)
+  for (auto scanner_info : dc_parser->scanner_info_list)
   {
     ibeo_msgs::ScannerInfo scanner_info_msg;
 
@@ -235,7 +198,7 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_msgs::
     new_msg.scanner_info_list.push_back(scanner_info_msg);
   }
 
-  for (auto scan_point : parser_class->scan_point_list)
+  for (auto scan_point : dc_parser->scan_point_list)
   {
     ibeo_msgs::ScanPoint2205 scan_point_msg;
 
@@ -254,45 +217,50 @@ void IbeoScalaRosMsgHandler::encode_2205(ScanData2205* parser_class, ibeo_msgs::
 
     new_msg.scan_point_list.push_back(scan_point_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_msgs::ScanData2208 &new_msg)
+void IbeoScalaRosMsgHandler::fill2208(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ScanData2208& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ScanData2208>(parser_class);
 
-  new_msg.scan_number = parser_class->scan_number;
-  new_msg.scanner_type = (parser_class->scanner_type == ibeo_msgs::ScanData2208::SCALA_B2) ? ibeo_msgs::ScanData2208::SCALA_B2 : 0;
-  new_msg.motor_on = parser_class->motor_on;
-  new_msg.laser_on = parser_class->laser_on;
-  new_msg.frequency_locked = parser_class->frequency_locked;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
+
+  new_msg.scan_number = dc_parser->scan_number;
+  new_msg.scanner_type = (dc_parser->scanner_type == ibeo_msgs::ScanData2208::SCALA_B2) ? ibeo_msgs::ScanData2208::SCALA_B2 : 0;
+  new_msg.motor_on = dc_parser->motor_on;
+  new_msg.laser_on = dc_parser->laser_on;
+  new_msg.frequency_locked = dc_parser->frequency_locked;
   
-  if (parser_class->motor_rotating_direction == CLOCKWISE)
+  if (dc_parser->motor_rotating_direction == CLOCKWISE)
     new_msg.motor_rotating_direction = ibeo_msgs::ScanData2208::CLOCKWISE;
-  else if (parser_class->motor_rotating_direction == COUNTER_CLOCKWISE)
+  else if (dc_parser->motor_rotating_direction == COUNTER_CLOCKWISE)
     new_msg.motor_rotating_direction = ibeo_msgs::ScanData2208::COUNTER_CLOCKWISE;
 
-  new_msg.angle_ticks_per_rotation = parser_class->angle_ticks_per_rotation;
-  new_msg.scan_flags = parser_class->scan_flags;
-  new_msg.mounting_yaw_angle_ticks = parser_class->mounting_yaw_angle_ticks;
-  new_msg.mounting_pitch_angle_ticks = parser_class->mounting_pitch_angle_ticks;
-  new_msg.mounting_roll_angle_ticks = parser_class->mounting_roll_angle_ticks;
-  new_msg.mounting_position_x = parser_class->mounting_position_x;
-  new_msg.mounting_position_y = parser_class->mounting_position_y;
-  new_msg.mounting_position_z = parser_class->mounting_position_z;
-  new_msg.device_id = parser_class->device_id;
-  new_msg.scan_start_time = ntp_to_ros_time(parser_class->scan_start_time);
-  new_msg.scan_end_time = ntp_to_ros_time(parser_class->scan_end_time);
-  new_msg.start_angle_ticks = parser_class->start_angle_ticks;
-  new_msg.end_angle_ticks = parser_class->end_angle_ticks;
+  new_msg.angle_ticks_per_rotation = dc_parser->angle_ticks_per_rotation;
+  new_msg.scan_flags = dc_parser->scan_flags;
+  new_msg.mounting_yaw_angle_ticks = dc_parser->mounting_yaw_angle_ticks;
+  new_msg.mounting_pitch_angle_ticks = dc_parser->mounting_pitch_angle_ticks;
+  new_msg.mounting_roll_angle_ticks = dc_parser->mounting_roll_angle_ticks;
+  new_msg.mounting_position_x = dc_parser->mounting_position_x;
+  new_msg.mounting_position_y = dc_parser->mounting_position_y;
+  new_msg.mounting_position_z = dc_parser->mounting_position_z;
+  new_msg.device_id = dc_parser->device_id;
+  new_msg.scan_start_time = ntp_to_ros_time(dc_parser->scan_start_time);
+  new_msg.scan_end_time = ntp_to_ros_time(dc_parser->scan_end_time);
+  new_msg.start_angle_ticks = dc_parser->start_angle_ticks;
+  new_msg.end_angle_ticks = dc_parser->end_angle_ticks;
 
-  if (parser_class->mirror_side == FRONT)
+  if (dc_parser->mirror_side == FRONT)
     new_msg.mirror_side = ibeo_msgs::ScanData2208::FRONT_MIRROR;
-  else if (parser_class->mirror_side == REAR)
+  else if (dc_parser->mirror_side == REAR)
     new_msg.mirror_side = ibeo_msgs::ScanData2208::REAR_MIRROR;
 
-  new_msg.mirror_tilt = parser_class->mirror_tilt;
+  new_msg.mirror_tilt = dc_parser->mirror_tilt;
 
-  for (auto scan_point : parser_class->scan_point_list)
+  for (auto scan_point : dc_parser->scan_point_list)
   {
     ibeo_msgs::ScanPoint2208 scan_point_msg;
 
@@ -308,16 +276,21 @@ void IbeoScalaRosMsgHandler::encode_2208(ScanData2208* parser_class, ibeo_msgs::
 
     new_msg.scan_point_list.push_back(scan_point_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_msgs::ObjectData2225 &new_msg)
+void IbeoScalaRosMsgHandler::fill2225(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ObjectData2225& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ObjectData2225>(parser_class);
 
-  new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
-  new_msg.number_of_objects = parser_class->number_of_objects;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  for (auto object : parser_class->object_list)
+  new_msg.mid_scan_timestamp = ntp_to_ros_time(dc_parser->mid_scan_timestamp);
+  new_msg.number_of_objects = dc_parser->number_of_objects;
+
+  for (auto object : dc_parser->object_list)
   {
     ibeo_msgs::Object2225 object_msg;
 
@@ -390,17 +363,22 @@ void IbeoScalaRosMsgHandler::encode_2225(ObjectData2225* parser_class, ibeo_msgs
 
     new_msg.object_list.push_back(object_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_msgs::ObjectData2270 &new_msg)
+void IbeoScalaRosMsgHandler::fill2270(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ObjectData2270& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ObjectData2270>(parser_class);
 
-  new_msg.start_scan_timestamp = ntp_to_ros_time(parser_class->start_scan_timestamp);
-  new_msg.object_list_number = parser_class->object_list_number;
-  new_msg.number_of_objects = parser_class->number_of_objects;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  for (auto object : parser_class->object_list)
+  new_msg.start_scan_timestamp = ntp_to_ros_time(dc_parser->start_scan_timestamp);
+  new_msg.object_list_number = dc_parser->object_list_number;
+  new_msg.number_of_objects = dc_parser->number_of_objects;
+
+  for (auto object : dc_parser->object_list)
   {
     ibeo_msgs::Object2270 object_msg;
 
@@ -526,17 +504,22 @@ void IbeoScalaRosMsgHandler::encode_2270(ObjectData2270* parser_class, ibeo_msgs
 
     new_msg.object_list.push_back(object_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_msgs::ObjectData2271 &new_msg)
+void IbeoScalaRosMsgHandler::fill2271(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ObjectData2271& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<ObjectData2271>(parser_class);
 
-  new_msg.start_scan_timestamp = ntp_to_ros_time(parser_class->start_scan_timestamp);
-  new_msg.scan_number = parser_class->scan_number;
-  new_msg.number_of_objects = parser_class->number_of_objects;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  for (auto object : parser_class->object_list)
+  new_msg.start_scan_timestamp = ntp_to_ros_time(dc_parser->start_scan_timestamp);
+  new_msg.scan_number = dc_parser->scan_number;
+  new_msg.number_of_objects = dc_parser->number_of_objects;
+
+  for (auto object : dc_parser->object_list)
   {
     ibeo_msgs::Object2271 object_msg;
 
@@ -708,14 +691,19 @@ void IbeoScalaRosMsgHandler::encode_2271(ObjectData2271* parser_class, ibeo_msgs
 
     new_msg.object_list.push_back(object_msg);
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_msgs::ObjectData2280 &new_msg)
+void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::ObjectData2280& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
-  new_msg.mid_scan_timestamp = ntp_to_ros_time(parser_class->mid_scan_timestamp);
+  auto dc_parser = std::dynamic_pointer_cast<ObjectData2280>(parser_class);
 
-  for (auto object : parser_class->object_list)
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
+  new_msg.mid_scan_timestamp = ntp_to_ros_time(dc_parser->mid_scan_timestamp);
+
+  for (auto object : dc_parser->object_list)
   {
     ibeo_msgs::Object2280 object_msg;
 
@@ -856,13 +844,18 @@ void IbeoScalaRosMsgHandler::encode_2280(ObjectData2280* parser_class, ibeo_msgs
     new_msg.objects.push_back(object_msg);
 
   }
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_msgs::CameraImage &new_msg)
+void IbeoScalaRosMsgHandler::fill2403(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::CameraImage& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<CameraImage>(parser_class);
 
-  switch( parser_class->image_format )
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
+
+  switch(dc_parser->image_format)
   {
     case JPEG:
       new_msg.image_format = new_msg.JPEG;
@@ -882,113 +875,131 @@ void IbeoScalaRosMsgHandler::encode_2403(CameraImage* parser_class, ibeo_msgs::C
 
   }
 
-  new_msg.us_since_power_on = parser_class->us_since_power_on;
-  new_msg.timestamp = ntp_to_ros_time(parser_class->timestamp);
-  new_msg.device_id = parser_class->device_id;
+  new_msg.us_since_power_on = dc_parser->us_since_power_on;
+  new_msg.timestamp = ntp_to_ros_time(dc_parser->timestamp);
+  new_msg.device_id = dc_parser->device_id;
   
-  new_msg.mounting_position.yaw_angle = parser_class->mounting_position.yaw_angle;
-  new_msg.mounting_position.pitch_angle = parser_class->mounting_position.pitch_angle;
-  new_msg.mounting_position.roll_angle = parser_class->mounting_position.roll_angle;
-  new_msg.mounting_position.x_position = parser_class->mounting_position.x_position;
-  new_msg.mounting_position.y_position = parser_class->mounting_position.y_position;
-  new_msg.mounting_position.z_position = parser_class->mounting_position.z_position;
+  new_msg.mounting_position.yaw_angle = dc_parser->mounting_position.yaw_angle;
+  new_msg.mounting_position.pitch_angle = dc_parser->mounting_position.pitch_angle;
+  new_msg.mounting_position.roll_angle = dc_parser->mounting_position.roll_angle;
+  new_msg.mounting_position.x_position = dc_parser->mounting_position.x_position;
+  new_msg.mounting_position.y_position = dc_parser->mounting_position.y_position;
+  new_msg.mounting_position.z_position = dc_parser->mounting_position.z_position;
   
-  new_msg.horizontal_opening_angle = parser_class->horizontal_opening_angle;
-  new_msg.vertical_opening_angle = parser_class->vertical_opening_angle;
-  new_msg.image_width = parser_class->image_width;
-  new_msg.image_height = parser_class->image_height;
-  new_msg.compressed_size = parser_class->compressed_size;
+  new_msg.horizontal_opening_angle = dc_parser->horizontal_opening_angle;
+  new_msg.vertical_opening_angle = dc_parser->vertical_opening_angle;
+  new_msg.image_width = dc_parser->image_width;
+  new_msg.image_height = dc_parser->image_height;
+  new_msg.compressed_size = dc_parser->compressed_size;
 
-  for( int i = 0; i < parser_class->image_width * parser_class->image_height; i++)
+  for( int i = 0; i < dc_parser->image_width * dc_parser->image_height; i++)
   {
-    new_msg.image_buffer[i] = parser_class->image_buffer[i];
+    new_msg.image_buffer[i] = dc_parser->image_buffer[i];
   }
-  
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2805(HostVehicleState2805* parser_class, ibeo_msgs::HostVehicleState2805 &new_msg)
+void IbeoScalaRosMsgHandler::fill2805(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::HostVehicleState2805& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<HostVehicleState2805>(parser_class);
 
-  new_msg.timestamp = ntp_to_ros_time(parser_class->timestamp);
-  new_msg.scan_number = parser_class->scan_number;
-  new_msg.error_flags = parser_class->error_flags;
-  new_msg.longitudinal_velocity = parser_class->longitudinal_velocity;
-  new_msg.steering_wheel_angle = parser_class->steering_wheel_angle;
-  new_msg.front_wheel_angle = parser_class->front_wheel_angle;
-  new_msg.x_position = parser_class->x_position;
-  new_msg.y_position = parser_class->y_position;
-  new_msg.course_angle = parser_class->course_angle;
-  new_msg.time_difference = parser_class->time_difference;
-  new_msg.x_difference = parser_class->x_difference;
-  new_msg.y_difference = parser_class->y_difference;
-  new_msg.heading_difference = parser_class->heading_difference;
-  new_msg.current_yaw_rate = parser_class->current_yaw_rate;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
+  new_msg.timestamp = ntp_to_ros_time(dc_parser->timestamp);
+  new_msg.scan_number = dc_parser->scan_number;
+  new_msg.error_flags = dc_parser->error_flags;
+  new_msg.longitudinal_velocity = dc_parser->longitudinal_velocity;
+  new_msg.steering_wheel_angle = dc_parser->steering_wheel_angle;
+  new_msg.front_wheel_angle = dc_parser->front_wheel_angle;
+  new_msg.x_position = dc_parser->x_position;
+  new_msg.y_position = dc_parser->y_position;
+  new_msg.course_angle = dc_parser->course_angle;
+  new_msg.time_difference = dc_parser->time_difference;
+  new_msg.x_difference = dc_parser->x_difference;
+  new_msg.y_difference = dc_parser->y_difference;
+  new_msg.heading_difference = dc_parser->heading_difference;
+  new_msg.current_yaw_rate = dc_parser->current_yaw_rate;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2806(HostVehicleState2806* parser_class, ibeo_msgs::HostVehicleState2806 &new_msg)
+void IbeoScalaRosMsgHandler::fill2806(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::HostVehicleState2806& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<HostVehicleState2806>(parser_class);
 
-    new_msg.stamp = ntp_to_ros_time(parser_class->timestamp);
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-    new_msg.distance_x = parser_class->distance_x;
-    new_msg.distance_y = parser_class->distance_y;
-    new_msg.course_angle = parser_class->course_angle;
-    new_msg.longitudinal_velocity = parser_class->longitudinal_velocity;
-    new_msg.yaw_rate = parser_class->yaw_rate;
-    new_msg.steering_wheel_angle = parser_class->steering_wheel_angle;
-    new_msg.cross_acceleration = parser_class->cross_acceleration;
-    new_msg.front_wheel_angle = parser_class->front_wheel_angle;
-    new_msg.vehicle_width = parser_class->vehicle_width;
-    new_msg.vehicle_front_to_front_axle = parser_class->vehicle_front_to_front_axle;
-    new_msg.rear_axle_to_front_axle = parser_class->rear_axle_to_front_axle;
-    new_msg.rear_axle_to_vehicle_rear = parser_class->rear_axle_to_vehicle_rear;
-    new_msg.steer_ratio_poly_0 = parser_class->steer_ratio_poly_0;
-    new_msg.steer_ratio_poly_1 = parser_class->steer_ratio_poly_1;
-    new_msg.steer_ratio_poly_2 = parser_class->steer_ratio_poly_2;
-    new_msg.steer_ratio_poly_3 = parser_class->steer_ratio_poly_3;
+  new_msg.stamp = ntp_to_ros_time(dc_parser->timestamp);
 
+  new_msg.distance_x = dc_parser->distance_x;
+  new_msg.distance_y = dc_parser->distance_y;
+  new_msg.course_angle = dc_parser->course_angle;
+  new_msg.longitudinal_velocity = dc_parser->longitudinal_velocity;
+  new_msg.yaw_rate = dc_parser->yaw_rate;
+  new_msg.steering_wheel_angle = dc_parser->steering_wheel_angle;
+  new_msg.cross_acceleration = dc_parser->cross_acceleration;
+  new_msg.front_wheel_angle = dc_parser->front_wheel_angle;
+  new_msg.vehicle_width = dc_parser->vehicle_width;
+  new_msg.vehicle_front_to_front_axle = dc_parser->vehicle_front_to_front_axle;
+  new_msg.rear_axle_to_front_axle = dc_parser->rear_axle_to_front_axle;
+  new_msg.rear_axle_to_vehicle_rear = dc_parser->rear_axle_to_vehicle_rear;
+  new_msg.steer_ratio_poly_0 = dc_parser->steer_ratio_poly_0;
+  new_msg.steer_ratio_poly_1 = dc_parser->steer_ratio_poly_1;
+  new_msg.steer_ratio_poly_2 = dc_parser->steer_ratio_poly_2;
+  new_msg.steer_ratio_poly_3 = dc_parser->steer_ratio_poly_3;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_2807(HostVehicleState2807* parser_class, ibeo_msgs::HostVehicleState2807 &new_msg)
+void IbeoScalaRosMsgHandler::fill2807(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::HostVehicleState2807& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<HostVehicleState2807>(parser_class);
 
-    new_msg.stamp = ntp_to_ros_time(parser_class->timestamp);
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-    new_msg.distance_x = parser_class->distance_x;
-    new_msg.distance_y = parser_class->distance_y;
-    new_msg.course_angle = parser_class->course_angle;
-    new_msg.longitudinal_velocity = parser_class->longitudinal_velocity;
-    new_msg.yaw_rate = parser_class->yaw_rate;
-    new_msg.steering_wheel_angle = parser_class->steering_wheel_angle;
-    new_msg.cross_acceleration = parser_class->cross_acceleration;
-    new_msg.front_wheel_angle = parser_class->front_wheel_angle;
-    new_msg.vehicle_width = parser_class->vehicle_width;
-    new_msg.vehicle_front_to_front_axle = parser_class->vehicle_front_to_front_axle;
-    new_msg.rear_axle_to_front_axle = parser_class->rear_axle_to_front_axle;
-    new_msg.rear_axle_to_vehicle_rear = parser_class->rear_axle_to_vehicle_rear;
-    new_msg.steer_ratio_poly_0 = parser_class->steer_ratio_poly_0;
-    new_msg.steer_ratio_poly_1 = parser_class->steer_ratio_poly_1;
-    new_msg.steer_ratio_poly_2 = parser_class->steer_ratio_poly_2;
-    new_msg.steer_ratio_poly_3 = parser_class->steer_ratio_poly_3;
-    new_msg.longitudinal_acceleration = parser_class->longitudinal_acceleration;
+  new_msg.stamp = ntp_to_ros_time(dc_parser->timestamp);
 
+  new_msg.distance_x = dc_parser->distance_x;
+  new_msg.distance_y = dc_parser->distance_y;
+  new_msg.course_angle = dc_parser->course_angle;
+  new_msg.longitudinal_velocity = dc_parser->longitudinal_velocity;
+  new_msg.yaw_rate = dc_parser->yaw_rate;
+  new_msg.steering_wheel_angle = dc_parser->steering_wheel_angle;
+  new_msg.cross_acceleration = dc_parser->cross_acceleration;
+  new_msg.front_wheel_angle = dc_parser->front_wheel_angle;
+  new_msg.vehicle_width = dc_parser->vehicle_width;
+  new_msg.vehicle_front_to_front_axle = dc_parser->vehicle_front_to_front_axle;
+  new_msg.rear_axle_to_front_axle = dc_parser->rear_axle_to_front_axle;
+  new_msg.rear_axle_to_vehicle_rear = dc_parser->rear_axle_to_vehicle_rear;
+  new_msg.steer_ratio_poly_0 = dc_parser->steer_ratio_poly_0;
+  new_msg.steer_ratio_poly_1 = dc_parser->steer_ratio_poly_1;
+  new_msg.steer_ratio_poly_2 = dc_parser->steer_ratio_poly_2;
+  new_msg.steer_ratio_poly_3 = dc_parser->steer_ratio_poly_3;
+  new_msg.longitudinal_acceleration = dc_parser->longitudinal_acceleration;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_6301(DeviceStatus* parser_class, ibeo_msgs::DeviceStatus &new_msg)
+void IbeoScalaRosMsgHandler::fill6301(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::DeviceStatus& new_msg)
 {
-  encode_ibeo_header(parser_class->ibeo_header, new_msg.ibeo_header);
+  auto dc_parser = std::dynamic_pointer_cast<DeviceStatus>(parser_class);
 
-  new_msg.scanner_type = parser_class->scanner_type;
-  new_msg.sensor_temperature = parser_class->sensor_temperature;
-  new_msg.frequency = parser_class->frequency;
+  fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
+  new_msg.scanner_type = dc_parser->scanner_type;
+  new_msg.sensor_temperature = dc_parser->sensor_temperature;
+  new_msg.frequency = dc_parser->frequency;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pcl::PointCloud<pcl::PointXYZ> &new_msg)
+void IbeoScalaRosMsgHandler::fillPointcloud(std::vector<Point3D>& points, pcl::PointCloud<pcl::PointXYZ>& new_msg)
 {
   for( Point3D p : points )
   {
@@ -1000,10 +1011,10 @@ void IbeoScalaRosMsgHandler::encode_pointcloud(std::vector<Point3D> &points,  pc
   }
 }
 
-void IbeoScalaRosMsgHandler::encode_contour_points(std::vector<Point3D> &points, visualization_msgs::Marker &new_msg)
+void IbeoScalaRosMsgHandler::fillContourPoints(std::vector<Point3D>& points, visualization_msgs::Marker& new_msg)
 {
-  //printf("encode %d contour points into marker: ",(int) points.size());
   int j = 0;
+
   new_msg.ns = "scala";
   new_msg.type = visualization_msgs::Marker::POINTS;
   new_msg.color.r = 0.0;
@@ -1014,27 +1025,26 @@ void IbeoScalaRosMsgHandler::encode_contour_points(std::vector<Point3D> &points,
   new_msg.scale.y = 0.05;
   new_msg.scale.z = 0.05;
 
-  for( Point3D p : points )
+  for(Point3D p : points)
   {
-    ////printf( "[%f %f] ", p.x, p.y);
     geometry_msgs::Point point;
     point.x = p.x;
     point.y = p.y;
     point.z = p.z;
     new_msg.points.push_back(point);
   }
-  //printf(" DONE.\n ");
 }
 
-void IbeoScalaRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &objects, visualization_msgs::MarkerArray &new_msg)
+void IbeoScalaRosMsgHandler::fillMarkerArray(std::vector<IbeoObject>& objects, visualization_msgs::MarkerArray& new_msg)
 {
-
-  std::string frame_id = "/ibeo_scala";
   for( IbeoObject o : objects )
   {
     tf::Quaternion quaternion = tf::createQuaternionFromYaw(o.object_box_orientation * 100/180 * M_PI);
-    visualization_msgs::Marker object_marker = createWireframeMarker(o.object_box_center.x, o.object_box_center.y,
-    o.object_box_size.size_x, o.object_box_size.size_y, 0.75);
+    visualization_msgs::Marker object_marker = createWireframeMarker(o.object_box_center.x,
+                                                                     o.object_box_center.y,
+                                                                     o.object_box_size.size_x,
+                                                                     o.object_box_size.size_y,
+                                                                     0.75);
     object_marker.id  = o.id;
     object_marker.pose.orientation.x = quaternion.x();
     object_marker.pose.orientation.y = quaternion.y();
@@ -1133,17 +1143,17 @@ void IbeoScalaRosMsgHandler::encode_marker_array(std::vector<IbeoObject> &object
     object_point_marker.header.stamp = ros::Time::now();
     object_point_marker.header.frame_id = frame_id;
 
-
     new_msg.markers.push_back(object_marker);
     new_msg.markers.push_back(object_label);
     new_msg.markers.push_back(object_point_marker);
-
   }
-
-
 }
 
-visualization_msgs::Marker IbeoScalaRosMsgHandler::createWireframeMarker(float center_x, float center_y, float size_x, float size_y, float size_z)
+visualization_msgs::Marker IbeoScalaRosMsgHandler::createWireframeMarker(const float& center_x,
+                                                                         const float& center_y,
+                                                                         float size_x,
+                                                                         float size_y,
+                                                                         const float& size_z)
 {
   visualization_msgs::Marker box;
   box.type = visualization_msgs::Marker::LINE_LIST;
@@ -1153,8 +1163,8 @@ visualization_msgs::Marker IbeoScalaRosMsgHandler::createWireframeMarker(float c
   box.scale.x = 0.05;
   geometry_msgs::Point p1, p2, p3, p4, p5, p6, p7, p8;
 
-  size_y = (size_y <= 0.1f)? 0.1f : size_y;
-  size_x = (size_x <= 0.1f)? 0.1f : size_x;
+  size_y = (size_y <= 0.1f) ? 0.1f : size_y;
+  size_x = (size_x <= 0.1f) ? 0.1f : size_x;
 
   float half_x = (0.5) * size_x;
   float half_y = (0.5) * size_y;
@@ -1220,4 +1230,3 @@ visualization_msgs::Marker IbeoScalaRosMsgHandler::createWireframeMarker(float c
 
   return box;
 }
-
