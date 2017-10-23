@@ -30,6 +30,7 @@
 
 using namespace AS;
 using namespace AS::Network;
+using namespace AS::Drivers::Ibeo;
 using namespace AS::Drivers::IbeoScala;
 
 TCPInterface tcp_interface;

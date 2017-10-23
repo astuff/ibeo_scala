@@ -4,6 +4,8 @@
 #include <utils.h>
 #include <ibeo_scala_common.h>
 
+using namespace AS::Drivers::Ibeo;
+
 namespace AS
 {
 namespace Drivers

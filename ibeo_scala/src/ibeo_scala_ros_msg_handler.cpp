@@ -1,5 +1,6 @@
 #include <ibeo_scala_ros_msg_handler.h>
 
+using namespace AS::Drivers::Ibeo;
 using namespace AS::Drivers::IbeoScala;
 
 IbeoScalaRosMsgHandler::IbeoScalaRosMsgHandler(ros::Publisher &pub, std::string frame_id) :
