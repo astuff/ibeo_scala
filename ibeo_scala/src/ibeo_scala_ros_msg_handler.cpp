@@ -120,6 +120,10 @@ void IbeoScalaRosMsgHandler::fill2202(std::shared_ptr<IbeoTxMessage>& parser_cla
   new_msg.mounting_position_x = dc_parser->mounting_position_x;
   new_msg.mounting_position_y = dc_parser->mounting_position_y;
   new_msg.mounting_position_z = dc_parser->mounting_position_z;
+  new_msg.ground_labeled = dc_parser->ground_labeled;
+  new_msg.dirt_labeled = dc_parser->dirt_labeled;
+  new_msg.rain_labeled = dc_parser->rain_labeled;
+  new_msg.mirror_side = static_cast<uint8_t>(dc_parser->mirror_side);
 
   for (auto scan_point : dc_parser->scan_point_list)
   {
@@ -168,7 +172,7 @@ void IbeoScalaRosMsgHandler::fill2205(std::shared_ptr<IbeoTxMessage>& parser_cla
 
   for (auto scanner_info : dc_parser->scanner_info_list)
   {
-    ibeo_msgs::ScannerInfo scanner_info_msg;
+    ibeo_msgs::ScannerInfo2205 scanner_info_msg;
 
     scanner_info_msg.device_id = scanner_info.device_id;
     scanner_info_msg.scanner_type = scanner_info.scanner_type;
@@ -297,7 +301,7 @@ void IbeoScalaRosMsgHandler::fill2225(std::shared_ptr<IbeoTxMessage>& parser_cla
 
     object_msg.id = object.id;
     object_msg.age = object.age;
-    object_msg.stamp = ntp_to_ros_time(object.timestamp);
+    object_msg.timestamp = ntp_to_ros_time(object.timestamp);
     object_msg.hidden_status_age = object.hidden_status_age;
     
     switch (object.classification)
@@ -708,7 +712,7 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
   {
     ibeo_msgs::Object2280 object_msg;
 
-    object_msg.object_id = object.id;
+    object_msg.id = object.id;
 
     if( object.tracking_model == DYNAMIC )
     {
@@ -933,7 +937,7 @@ void IbeoScalaRosMsgHandler::fill2806(std::shared_ptr<IbeoTxMessage>& parser_cla
 
   fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  new_msg.stamp = ntp_to_ros_time(dc_parser->timestamp);
+  new_msg.timestamp = ntp_to_ros_time(dc_parser->timestamp);
 
   new_msg.distance_x = dc_parser->distance_x;
   new_msg.distance_y = dc_parser->distance_y;
@@ -962,7 +966,7 @@ void IbeoScalaRosMsgHandler::fill2807(std::shared_ptr<IbeoTxMessage>& parser_cla
 
   fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
 
-  new_msg.stamp = ntp_to_ros_time(dc_parser->timestamp);
+  new_msg.timestamp = ntp_to_ros_time(dc_parser->timestamp);
 
   new_msg.distance_x = dc_parser->distance_x;
   new_msg.distance_y = dc_parser->distance_y;
