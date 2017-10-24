@@ -121,8 +121,8 @@ int main(int argc, char **argv)
     object_2225_pub = n.advertise<ibeo_msgs::ObjectData2225>("parsed_tx/object_data_2225", 1);
     object_2280_pub = n.advertise<ibeo_msgs::ObjectData2280>("parsed_tx/object_data_2280", 1);
     camera_image_pub = n.advertise<ibeo_msgs::CameraImage>("parsed_tx/camera_image", 1);
-    vehicle_state_2806_pub = n.advertise<ibeo_msgs::HostVehicleState2806>("parsed_tx/hosts_vehicle_state_2806", 1);
-    vehicle_state_2807_pub = n.advertise<ibeo_msgs::HostVehicleState2807>("parsed_tx/hosts_vehicle_state_2807", 1);
+    vehicle_state_2806_pub = n.advertise<ibeo_msgs::HostVehicleState2806>("parsed_tx/host_vehicle_state_2806", 1);
+    vehicle_state_2807_pub = n.advertise<ibeo_msgs::HostVehicleState2807>("parsed_tx/host_vehicle_state_2807", 1);
 
     IbeoScalaRosMsgHandler handler_2205(scan_2205_pub, frame_id);
     IbeoScalaRosMsgHandler handler_2225(object_2225_pub, frame_id);
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     scan_2208_pub = n.advertise<ibeo_msgs::ScanData2208>("parsed_tx/scan_data_2208", 1);
     object_2270_pub = n.advertise<ibeo_msgs::ObjectData2270>("parsed_tx/object_data_2270", 1);
     object_2271_pub = n.advertise<ibeo_msgs::ObjectData2271>("parsed_tx/object_data_2271", 1);
-    vehicle_state_2805_pub = n.advertise<ibeo_msgs::HostVehicleState2805>("parsed_tx/hosts_vehicle_state_2805", 1);
+    vehicle_state_2805_pub = n.advertise<ibeo_msgs::HostVehicleState2805>("parsed_tx/host_vehicle_state_2805", 1);
 
     IbeoScalaRosMsgHandler handler_2202(scan_2202_pub, frame_id);
     IbeoScalaRosMsgHandler handler_2208(scan_2208_pub, frame_id);
@@ -209,33 +209,38 @@ int main(int argc, char **argv)
         ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
 
         buf_size = IBEO_PAYLOAD_SIZE;
-        orig_msg_buf = (unsigned char*) calloc(sizeof(unsigned char), buf_size + 1); //New allocation.
-        msg_buf = orig_msg_buf;
+        std::unique_ptr<unsigned char[]> msg_buf(new unsigned char[buf_size + 1]);
 
-        status = tcp_interface.read(msg_buf, buf_size, bytes_read); //Read a (big) chunk.
-        buf_size = bytes_read;
-        grand_buffer.insert(grand_buffer.end(), msg_buf, msg_buf + bytes_read);
-    
-        int first_mw = 0;
-        //ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
+        status = tcp_interface.read(msg_buf.get(), buf_size, bytes_read); //Read a (big) chunk.
         
-        int j = 1;
-
-        //TODO: FMEA on following loop.
-        while (true)
+        if (status != OK && status != NO_MESSAGES_RECEIVED)
         {
-          first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size(), MAGIC_WORD);
-          
-          if(first_mw == -1) // no magic word found. move along.
+          ROS_WARN("Ibeo ScaLa - Failed to read from socket: %d - %s", status, return_status_desc(status).c_str());
+        }
+        else if (status == OK)
+        {
+          buf_size = bytes_read;
+          grand_buffer.insert(grand_buffer.end(), msg_buf.get(), msg_buf.get() + bytes_read);
+      
+          int first_mw = 0;
+          //ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
+
+          //TODO: FMEA on following loop.
+          while (true)
           {
-             break;
-          }
-          else  // magic word found. pull out message from grand buffer and add it to the message list.
-          {
-            std::vector<unsigned char> msg;
-            msg.insert(msg.end(),grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
-            messages.push_back(msg);
-            grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
+            first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size(), MAGIC_WORD);
+            
+            if(first_mw == -1) // no magic word found. move along.
+            {
+               break;
+            }
+            else  // magic word found. pull out message from grand buffer and add it to the message list.
+            {
+              std::vector<unsigned char> msg;
+              msg.insert(msg.end(),grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
+              messages.push_back(msg);
+              grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
+            }
           }
         }
 
@@ -321,7 +326,6 @@ int main(int argc, char **argv)
       } // If not fusion or filter message already sent
     } // If interface is open
 
-    free(orig_msg_buf); //FREE THE BITS
     loop_rate.sleep();
     //ros::spinOnce(); // No callbacks yet - no reason to spin.
   } // ROS Loop
