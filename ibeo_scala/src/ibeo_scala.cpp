@@ -46,7 +46,6 @@ int main(int argc, char **argv)
   unsigned char *orig_msg_buf; //Used for deallocation.
   size_t bytes_read;
   int buf_size = IBEO_PAYLOAD_SIZE;
-  std::vector<unsigned char> partial_msg;
   std::vector<unsigned char> grand_buffer;
   std::vector<std::vector<unsigned char>> messages;
 
