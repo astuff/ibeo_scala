@@ -1018,8 +1018,6 @@ void IbeoScalaRosMsgHandler::fillPointcloud(std::vector<Point3D>& points, pcl::P
 
 void IbeoScalaRosMsgHandler::fillContourPoints(std::vector<Point3D>& points, visualization_msgs::Marker& new_msg)
 {
-  int j = 0;
-
   new_msg.ns = "scala";
   new_msg.type = visualization_msgs::Marker::POINTS;
   new_msg.color.r = 0.0;
