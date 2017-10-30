@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     return 0;
 
   ros::Publisher eth_tx_pub = n.advertise<network_interface::TCPFrame>("tcp_tx", 10);
-  ros::Publisher pointcloud_pub = n.advertise<pcl::PointCloud <pcl::PointXYZ> >("as_tx/point_cloud", 1);
+  ros::Publisher pointcloud_pub = n.advertise<pcl::PointCloud <pcl::PointXYZL> >("as_tx/point_cloud", 1);
   ros::Publisher object_markers_pub = n.advertise<visualization_msgs::MarkerArray>("as_tx/objects", 1);
   ros::Publisher object_contour_points_pub = n.advertise<visualization_msgs::Marker>("as_tx/object_contour_points", 1);
 
@@ -281,11 +281,11 @@ int main(int argc, char **argv)
 
               if (class_parser->has_scan_points)
               {
-                pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
+                pcl::PointCloud<pcl::PointXYZL> pcl_cloud;
                 pcl_cloud.header.frame_id = frame_id;
                 //pcl_cloud.header.stamp = ibeo_header.time;
                 pcl_conversions::toPCL(ros::Time::now(), pcl_cloud.header.stamp);
-                std::vector<Point3D> scan_points = class_parser->get_scan_points();
+                std::vector<Point3DL> scan_points = class_parser->get_scan_points();
                 msg_handler->second.fillPointcloud(scan_points, pcl_cloud);
                 pointcloud_pub.publish(pcl_cloud);
               }

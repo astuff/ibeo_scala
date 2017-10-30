@@ -1004,14 +1004,15 @@ void IbeoScalaRosMsgHandler::fill6301(std::shared_ptr<IbeoTxMessage>& parser_cla
   new_msg.header.stamp = ros::Time::now();
 }
 
-void IbeoScalaRosMsgHandler::fillPointcloud(std::vector<Point3D>& points, pcl::PointCloud<pcl::PointXYZ>& new_msg)
+void IbeoScalaRosMsgHandler::fillPointcloud(std::vector<Point3DL>& points, pcl::PointCloud<pcl::PointXYZL>& new_msg)
 {
-  for( Point3D p : points )
+  for( Point3DL p : points )
   {
-    pcl::PointXYZ pclp;
+    pcl::PointXYZL pclp;
     pclp.x = p.x;
     pclp.y = p.y;
     pclp.z = p.z;
+    pclp.label = p.label;
     new_msg.push_back(pclp);
   }
 }
