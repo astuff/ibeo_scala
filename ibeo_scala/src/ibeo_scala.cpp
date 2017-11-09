@@ -208,9 +208,8 @@ int main(int argc, char **argv)
           grand_buffer.insert(grand_buffer.end(), msg_buf.get(), msg_buf.get() + bytes_read);
       
           int first_mw = 0;
-          //ROS_INFO("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
+          //ROS_DEBUG("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
 
-          //TODO: FMEA on following loop.
           while (true)
           {
             first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size(), MAGIC_WORD);
@@ -221,11 +220,26 @@ int main(int argc, char **argv)
             }
             else  // magic word found. pull out message from grand buffer and add it to the message list.
             {
+              if (first_mw > 0)
+                grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw); // Unusable data in beginning of buffer.
+
+              // From here on, the detected Magic Word should be at the beginning of the grand_buffer.
+
+              IbeoDataHeader header;
               std::vector<unsigned char> msg;
-              msg.insert(msg.end(),grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
+
+              header.parse(grand_buffer.data());
+
+              if (grand_buffer.size() < IBEO_HEADER_SIZE + header.message_size)
+                break; // Incomplete message left in grand_buffer. Wait for next read.
+
+              msg.insert(msg.end(), grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size + 1);
               messages.push_back(msg);
-              grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw + 1);
+              grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size + 1);
             }
+
+            if (!ros::ok())
+              break;
           }
         }
 
