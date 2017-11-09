@@ -220,8 +220,12 @@ int main(int argc, char **argv)
             }
             else  // magic word found. pull out message from grand buffer and add it to the message list.
             {
+              ROS_DEBUG("Size before removing unused bytes: %lu", grand_buffer.size());
+
               if (first_mw > 0)
                 grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw); // Unusable data in beginning of buffer.
+
+              ROS_DEBUG("Size before parsing message: %lu", grand_buffer.size());
 
               // From here on, the detected Magic Word should be at the beginning of the grand_buffer.
 
@@ -236,6 +240,8 @@ int main(int argc, char **argv)
               msg.insert(msg.end(), grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size + 1);
               messages.push_back(msg);
               grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size + 1);
+
+              ROS_DEBUG("Size after parsing message: %lu", grand_buffer.size());
             }
 
             if (!ros::ok())
