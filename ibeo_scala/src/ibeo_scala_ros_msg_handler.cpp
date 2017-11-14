@@ -1102,7 +1102,7 @@ void IbeoScalaRosMsgHandler::fillMarkerArray(std::vector<IbeoObject>& objects, v
     }
 
     object_marker.ns = label;
-    object_marker.type = visualization_msgs::Marker::CUBE;
+    object_marker.type = visualization_msgs::Marker::LINE_LIST;
     object_marker.action = visualization_msgs::Marker::ADD;
     object_marker.header.stamp = ros::Time::now();
     object_marker.header.frame_id = frame_id;
@@ -1156,8 +1156,6 @@ visualization_msgs::Marker IbeoScalaRosMsgHandler::createWireframeMarker(const f
                                                                          const float& size_z)
 {
   visualization_msgs::Marker box;
-  box.type = visualization_msgs::Marker::LINE_LIST;
-  box.action = visualization_msgs::Marker::ADD;
   box.pose.position.x = center_x;
   box.pose.position.y = center_y;
   box.scale.x = 0.05;

@@ -191,7 +191,7 @@ int main(int argc, char **argv)
       }
       else
       {
-        ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
+        //ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
 
         buf_size = IBEO_PAYLOAD_SIZE;
         std::unique_ptr<unsigned char[]> msg_buf(new unsigned char[buf_size + 1]);
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
 
           while (true)
           {
-            first_mw = find_magic_word((uint8_t*) grand_buffer.data() + 1, grand_buffer.size(), MAGIC_WORD);
+            first_mw = find_magic_word(grand_buffer.data(), grand_buffer.size(), MAGIC_WORD);
             
             if(first_mw == -1) // no magic word found. move along.
             {
@@ -221,27 +221,31 @@ int main(int argc, char **argv)
             else  // magic word found. pull out message from grand buffer and add it to the message list.
             {
               //ROS_DEBUG("Size before removing unused bytes: %lu", grand_buffer.size());
+              //ROS_DEBUG("Location of MW: %i", first_mw);
 
               if (first_mw > 0)
                 grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + first_mw); // Unusable data in beginning of buffer.
 
-              //ROS_DEBUG("Size before parsing message: %lu", grand_buffer.size());
-
               // From here on, the detected Magic Word should be at the beginning of the grand_buffer.
+
+              //ROS_DEBUG("Size before reading message: %lu", grand_buffer.size());
 
               IbeoDataHeader header;
               std::vector<unsigned char> msg;
 
               header.parse(grand_buffer.data());
 
+              //ROS_DEBUG("Calculated size of message: %u", IBEO_HEADER_SIZE + header.message_size);
+
               if (grand_buffer.size() < IBEO_HEADER_SIZE + header.message_size)
-                break; // Incomplete message left in grand_buffer. Wait for next read.
+                break; // Incomplete message left in grand buffer. Wait for next read.
 
               msg.insert(msg.end(), grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size);
+              //ROS_DEBUG("Size of copied message: %lu", msg.size());
               messages.push_back(msg);
               grand_buffer.erase(grand_buffer.begin(), grand_buffer.begin() + IBEO_HEADER_SIZE + header.message_size);
 
-              //ROS_DEBUG("Size after parsing message: %lu", grand_buffer.size());
+              //ROS_DEBUG("Size after reading message: %lu", grand_buffer.size());
             }
 
             if (!ros::ok())
@@ -254,7 +258,7 @@ int main(int argc, char **argv)
           //Found at least one message, let's parse them.
           for(unsigned int i = 0; i < messages.size(); i++)
           {
-            ROS_DEBUG("Ibeo ScaLa - Parsing message %u of %lu.", i, messages.size());
+            //ROS_DEBUG("Ibeo ScaLa - Parsing message %u of %lu.", i, messages.size());
 
             if (publish_raw)
             {
@@ -269,12 +273,12 @@ int main(int argc, char **argv)
               eth_tx_pub.publish(raw_frame);
             }
 
-            ROS_DEBUG("Ibeo ScaLa - Size of message: %lu.", messages[i].size());
+            //ROS_DEBUG("Ibeo ScaLa - Size of message: %lu.", messages[i].size());
 
             IbeoDataHeader ibeo_header;
             ibeo_header.parse(messages[i].data());
 
-            ROS_DEBUG("Ibeo ScaLa - Got message type: 0x%X", ibeo_header.data_type_id);
+            //ROS_DEBUG("Ibeo ScaLa - Got message type: 0x%x", ibeo_header.data_type_id);
 
             auto class_parser = IbeoTxMessage::make_message(ibeo_header.data_type_id); //Instantiate a parser class of the correct type.
             auto pub = pub_list.find(ibeo_header.data_type_id); //Look up the message handler for this type.
