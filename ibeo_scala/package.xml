@@ -15,6 +15,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>roscpp</depend>
+  <depend>ibeo_core</depend>
   <depend>pcl_ros</depend>
   <depend>network_interface</depend>
   <depend>ibeo_msgs</depend>

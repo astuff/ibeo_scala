@@ -1,7 +1,7 @@
 #ifndef IBEO_SCALA_ROS_MSG_HANDLER_H
 #define IBEO_SCALA_ROS_MSG_HANDLER_H
 
-#include <utils.h>
+#include <ibeo_core/utils.h>
 #include <ibeo_scala_common.h>
 
 using namespace AS::Drivers::Ibeo;

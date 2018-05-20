@@ -8,6 +8,7 @@ find_package(catkin REQUIRED
   COMPONENTS
   roscpp
   pcl_ros
+  ibeo_core
   network_interface
   ibeo_msgs
   geometry_msgs
@@ -18,18 +19,17 @@ find_package(catkin REQUIRED
 catkin_package(
   CATKIN_DEPENDS
   ibeo_msgs
+  ibeo_core
 )
 
 include_directories(
   include/${PROJECT_NAME}
-  core_ibeo/include
   ${catkin_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}
   src/ibeo_scala.cpp
   src/ibeo_scala_ros_msg_handler.cpp
-  core_ibeo/src/ibeo_core.cpp
 )
 
 add_dependencies(${PROJECT_NAME}
