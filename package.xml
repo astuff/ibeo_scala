@@ -3,14 +3,14 @@
   <name>ibeo_scala</name>
   <version>2.0.0</version>
   <description>The Ibeo ScaLa driver.</description>
-  <license>LGPLv2.1</license>
+  <license>MIT</license>
 
   <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
   <author email="jwhitley@autonomoustuff.com">Joshua Whitley</author>
   <author email="preed@swri.org">P. J. Reed</author>
 
-  <url type="bugtracker">https://bitbucket.org/autonomoustuff/ros_ibeo_scala/issues</url>
-  <url type="repository">https://bitbucket.org/autonomoustuff/ros_ibeo_scala</url>
+  <url type="bugtracker">https://github.com/astuff/ibeo_scala/issues</url>
+  <url type="repository">https://github.com/astuff/ibeo_scala</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 
