@@ -1,7 +1,7 @@
 - git:
     local-name: ibeo_core
     uri: https://github.com/astuff/ibeo_core
-    version: maint/changes_to_network_interface
+    version: maint/updates_to_network_interface
 
 - git:
     local-name: astuff_sensor_msgs
