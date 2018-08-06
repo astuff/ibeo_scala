@@ -44,10 +44,8 @@ int main(int argc, char **argv)
 	std::string frame_id = "ibeo_scala";
 	bool is_fusion = false;
   bool publish_raw = false;
-  unsigned char *msg_buf;
-  unsigned char *orig_msg_buf; //Used for deallocation.
-  size_t bytes_read;
-  int buf_size = IBEO_PAYLOAD_SIZE;
+  std::vector<uint8_t> msg_buf;
+  size_t bytes_read = 0;
   std::vector<unsigned char> grand_buffer;
   std::vector<std::vector<unsigned char>> messages;
 
@@ -175,7 +173,7 @@ int main(int argc, char **argv)
         CommandSetFilter cmd;
         cmd.encode();
 
-        status = tcp_interface.write(cmd.encoded_data.data(), cmd.encoded_data.size());
+        status = tcp_interface.write(cmd.encoded_data);
         
         if(status == OK)
         {
@@ -193,10 +191,7 @@ int main(int argc, char **argv)
       {
         //ROS_DEBUG("Ibeo ScaLa - Setup complete. Starting loop.");
 
-        buf_size = IBEO_PAYLOAD_SIZE;
-        std::unique_ptr<unsigned char[]> msg_buf(new unsigned char[buf_size + 1]);
-
-        status = tcp_interface.read(msg_buf.get(), buf_size, bytes_read); //Read a (big) chunk.
+        status = tcp_interface.read(&msg_buf, bytes_read); //Read a (big) chunk.
         
         if (status != OK && status != NO_MESSAGES_RECEIVED)
         {
@@ -204,15 +199,16 @@ int main(int argc, char **argv)
         }
         else if (status == OK)
         {
-          buf_size = bytes_read;
-          grand_buffer.insert(grand_buffer.end(), msg_buf.get(), msg_buf.get() + bytes_read);
+          grand_buffer.reserve(grand_buffer.size() + msg_buf.size());
+          std::move<std::vector<uint8_t>::iterator, std::vector<uint8_t>::iterator>(msg_buf.begin(), msg_buf.end(), grand_buffer.end());
+          msg_buf.erase(msg_buf.begin(), msg_buf.end());
       
           int first_mw = 0;
           //ROS_DEBUG("Finished reading %d bytes of data. Total buffer size is %d.",bytes_read, grand_buffer.size());
 
           while (true)
           {
-            first_mw = find_magic_word(grand_buffer.data(), grand_buffer.size(), MAGIC_WORD);
+            first_mw = find_magic_word(grand_buffer.begin(), grand_buffer.end(), MAGIC_WORD);
             
             if(first_mw == -1) // no magic word found. move along.
             {
@@ -233,7 +229,7 @@ int main(int argc, char **argv)
               IbeoDataHeader header;
               std::vector<unsigned char> msg;
 
-              header.parse(grand_buffer.data());
+              header.parse(grand_buffer.begin());
 
               //ROS_DEBUG("Calculated size of message: %u", IBEO_HEADER_SIZE + header.message_size);
 
@@ -276,7 +272,7 @@ int main(int argc, char **argv)
             //ROS_DEBUG("Ibeo ScaLa - Size of message: %lu.", messages[i].size());
 
             IbeoDataHeader ibeo_header;
-            ibeo_header.parse(messages[i].data());
+            ibeo_header.parse(messages[i].begin());
 
             //ROS_DEBUG("Ibeo ScaLa - Got message type: 0x%x", ibeo_header.data_type_id);
 
@@ -286,7 +282,7 @@ int main(int argc, char **argv)
             //Only parse message types we know how to handle.
             if (class_parser != NULL && pub != pub_list.end())
             {
-              class_parser->parse(messages[i].data()); //Parse the raw data into the class.
+              class_parser->parse(messages[i].begin()); //Parse the raw data into the class.
               handler.fillAndPublish(ibeo_header.data_type_id, frame_id, pub->second, class_parser); //Create a new message of the correct type and publish it.
 
               if (class_parser->has_scan_points)
