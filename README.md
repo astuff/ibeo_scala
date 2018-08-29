@@ -1,7 +1,7 @@
 Ibeo ScaLa
 ==========
 
-[![Build Status](https://travis-ci.org/astuff/ibeo_scala.svg?branch=master)](https://travis-ci.org/astuff/ibeo_scala)
+[![CircleCI](https://circleci.com/gh/astuff/ibeo_scala/tree/master.svg?style=svg)](https://circleci.com/gh/astuff/ibeo_scala/tree/master)
 
 The Ibeo ScaLa is a multi-plane laser scanner with embedded object tracking and classification designed for mass-production.
 For more information on the Ibeo Scala sensors, see https://autonomoustuff.com/brand/ibeo/.
