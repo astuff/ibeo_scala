@@ -702,7 +702,9 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
   auto dc_parser = std::dynamic_pointer_cast<ObjectData2280>(parser_class);
 
   fillIbeoHeader(dc_parser->ibeo_header, new_msg.ibeo_header);
+
   new_msg.mid_scan_timestamp = ntp_to_ros_time(dc_parser->mid_scan_timestamp);
+  new_msg.number_of_objects = dc_parser->number_of_objects;
 
   for (auto object : dc_parser->object_list)
   {
@@ -713,18 +715,18 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
     if( object.tracking_model == DYNAMIC )
     {
       object_msg.tracking_model = object_msg.DYNAMIC_MODEL;
-    } 
+    }
     else
     {
       object_msg.tracking_model = object_msg.STATIC_MODEL;
-    } 
+    }
 
     object_msg.mobility_of_dyn_object_detected = object.mobility_of_dyn_object_detected;
     object_msg.motion_model_validated = object.motion_model_validated;
     object_msg.object_age = object.object_age;
     object_msg.timestamp = ntp_to_ros_time(object.timestamp);
     object_msg.object_prediction_age = object.object_prediction_age;
-   
+
     switch( object.classification )
     {
       case UNCLASSIFIED:
@@ -764,19 +766,19 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
 
     object_msg.object_box_orientation_angle = object.object_box_orientation_angle;
     object_msg.object_box_orientation_angle_sigma = object.object_box_orientation_angle_sigma;
-    
+
     object_msg.relative_velocity.x = object.relative_velocity.x;
     object_msg.relative_velocity.y = object.relative_velocity.y;
-    
+
     object_msg.relative_velocity_sigma.x = object.relative_velocity_sigma.x;
     object_msg.relative_velocity_sigma.y = object.relative_velocity_sigma.y;
-    
+
     object_msg.absolute_velocity.x = object.absolute_velocity.x;
     object_msg.absolute_velocity.y = object.absolute_velocity.y;
-    
+
     object_msg.absolute_velocity_sigma.x = object.absolute_velocity_sigma.x;
     object_msg.absolute_velocity_sigma.y = object.absolute_velocity_sigma.y;
-    
+
     object_msg.closest_point_index = object.closest_point_index;
 
     object_msg.reference_point_location = (uint16_t) object.reference_point_location;
@@ -830,8 +832,7 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
 
     object_msg.absolute_velocity.x = object.absolute_velocity.x;
     object_msg.absolute_velocity.y = object.absolute_velocity.y;
-    // object.number_of_contour_points;
-    int i = 0;
+    object_msg.number_of_contour_points = object.number_of_contour_points;
     for (auto contour_point : object.contour_point_list)
     {
       ibeo_msgs::Point2Df msg_cp;
@@ -839,17 +840,14 @@ void IbeoScalaRosMsgHandler::fill2280(std::shared_ptr<IbeoTxMessage>& parser_cla
       msg_cp.y = contour_point.y;
 
       object_msg.contour_point_list.push_back(msg_cp);
-      i++;
     }
 
     new_msg.objects.push_back(object_msg);
-
   }
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
 }
-
 void IbeoScalaRosMsgHandler::fill2403(std::shared_ptr<IbeoTxMessage>& parser_class, ibeo_msgs::CameraImage& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<CameraImage>(parser_class);
@@ -1039,7 +1037,7 @@ void IbeoScalaRosMsgHandler::fillMarkerArray(std::vector<IbeoObject>& objects, v
 {
   for( IbeoObject o : objects )
   {
-    tf::Quaternion quaternion = tf::createQuaternionFromYaw(o.object_box_orientation * 100/180 * M_PI);
+    tf::Quaternion quaternion = tf::createQuaternionFromYaw(o.object_box_orientation);
     visualization_msgs::Marker object_marker = createWireframeMarker(o.object_box_center.x,
                                                                      o.object_box_center.y,
                                                                      o.object_box_size.size_x,
