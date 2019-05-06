@@ -3,7 +3,7 @@
 using namespace AS::Drivers::Ibeo;
 using namespace AS::Drivers::IbeoScala;
 
-void IbeoScalaRosMsgHandler::fillAndPublish(const unsigned short& type_id,
+void IbeoScalaRosMsgHandler::fillAndPublish(const uint16_t& type_id,
                                             std::string frame_id,
                                             ros::Publisher& pub,
                                             std::shared_ptr<IbeoTxMessage>& parser_class)
@@ -190,7 +190,7 @@ void IbeoScalaRosMsgHandler::fill2205(std::shared_ptr<IbeoTxMessage>& parser_cla
     scanner_info_msg.mounting_position.y_position = scanner_info.mounting_position.y_position;
     scanner_info_msg.mounting_position.z_position = scanner_info.mounting_position.z_position;
 
-    for (int i = 0; i < 8; i++)
+    for (int32_t i = 0; i < 8; i++)
     {
       scanner_info_msg.resolutions[i].resolution_start_angle = scanner_info.resolutions[i].resolution_start_angle;
       scanner_info_msg.resolutions[i].resolution = scanner_info.resolutions[i].resolution;
@@ -891,7 +891,7 @@ void IbeoScalaRosMsgHandler::fill2403(std::shared_ptr<IbeoTxMessage>& parser_cla
   new_msg.image_height = dc_parser->image_height;
   new_msg.compressed_size = dc_parser->compressed_size;
 
-  for( int i = 0; i < dc_parser->image_width * dc_parser->image_height; i++)
+  for (int32_t i = 0; i < dc_parser->image_width * dc_parser->image_height; i++)
   {
     new_msg.image_buffer[i] = dc_parser->image_buffer[i];
   }
