@@ -10,6 +10,9 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir ibeo_scala && mv `find -maxdepth 1 -not -name . -not -name ibeo_scala` ibeo_scala/
+            git clone https://github.com/astuff/network_interface -b maint/cpp_11_cleanup
+            git clone https://github.com/astuff/ibeo_core -b maint/network_interface_updates
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -24,7 +27,7 @@ jobs:
           command: |
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
-            catkin run_tests
+            catkin run_tests --no-deps ibeo_scala
             catkin_test_results
     working_directory: ~/src
 
@@ -38,6 +41,9 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir ibeo_scala && mv `find -maxdepth 1 -not -name . -not -name ibeo_scala` ibeo_scala/
+            git clone https://github.com/astuff/network_interface -b maint/cpp_11_cleanup
+            git clone https://github.com/astuff/ibeo_core -b maint/network_interface_updates
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -52,7 +58,7 @@ jobs:
           command: |
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
-            catkin run_tests
+            catkin run_tests --no-deps ibeo_scala
             catkin_test_results
     working_directory: ~/src
 
