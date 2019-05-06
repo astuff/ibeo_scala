@@ -48,8 +48,6 @@ int main(int argc, char **argv)
 	std::string frame_id = "ibeo_scala";
 	bool is_fusion = false;
   bool publish_raw = false;
-  uint8_t *msg_buf;
-  uint8_t *orig_msg_buf; //Used for deallocation.
   size_t bytes_read;
   std::deque<uint8_t> grand_buffer;
   std::queue<std::vector<uint8_t>> messages;
