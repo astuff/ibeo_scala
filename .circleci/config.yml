@@ -10,6 +10,9 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir ibeo_scala && mv `find -maxdepth 1 -not -name . -not -name ibeo_scala` ibeo_scala/
+            git clone https://github.com/astuff/network_interface
+            git clone https://github.com/astuff/ibeo_core
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -22,34 +25,10 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            cd ..
-            catkin run_tests
-    working_directory: ~/src
-
-  lunar:
-    docker:
-      - image: autonomoustuff/docker-builds:lunar-perception
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
-            rosdep install --from-paths . --ignore-src -y
             cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            cd ..
-            catkin build
-      - run:
-          name: Run Tests
-          command: |
-            cd ..
-            catkin run_tests
+            catkin run_tests --no-deps ibeo_scala
+            catkin_test_results
     working_directory: ~/src
 
   melodic:
@@ -62,6 +41,9 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir ibeo_scala && mv `find -maxdepth 1 -not -name . -not -name ibeo_scala` ibeo_scala/
+            git clone https://github.com/astuff/network_interface
+            git clone https://github.com/astuff/ibeo_core
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -74,8 +56,10 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
-            catkin run_tests
+            catkin run_tests --no-deps ibeo_scala
+            catkin_test_results
     working_directory: ~/src
 
 workflows:
@@ -83,5 +67,4 @@ workflows:
   ros_build:
     jobs:
       - kinetic
-      - lunar
       - melodic
